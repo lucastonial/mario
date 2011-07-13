@@ -72,6 +72,7 @@ class PlayFisicaState : public CGameState
 		void DesenhaLinha(float x1, float y1, float x2, float y2);
 		void CriaMapDeColisao();
 		void CriaCaixa(int id, float x, float y, float w, float h);
+		void CarregaQuestionBlocks(string path, float positionX, float positionY);
 		
     private:
         static PlayFisicaState m_PlayState;
@@ -80,6 +81,7 @@ class PlayFisicaState : public CGameState
         CTilesMap *mapColisao;
         CSprite *spriteMario;
 		CSprite *spriteCobra;
+		CSprite *insereQuestionBlocks;
 
         Uint8* keystate; // state of all keys (1 means key is pressed)
 
@@ -101,6 +103,8 @@ class PlayFisicaState : public CGameState
 		enum ACOES_MARIO {
         PULANDO, CAMINHANDO, CORRENDO
 		}; ACOES_MARIO AcaoMario;
+
+		vector<CSprite *> QuestionBlocks;
 
 		//impede que o Mario dê dois pulos quando já está no ar
 		bool estaPulando;

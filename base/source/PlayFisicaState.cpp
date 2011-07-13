@@ -102,6 +102,36 @@ void PlayFisicaState::CarregaSprites() {
 	spriteCobra->setPosition(300, 250);
 	spriteCobra->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
 
+	//Chama o método para carregar os Question Blocks - Ordem de aparecimento pelo X (coluna)
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 768, 352); //Coluna 24, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 928, 352); //Coluna 29, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 960, 224); //Coluna 30, Linha 7
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 992, 352); //Coluna 31, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 3104, 352); //Coluna 97, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 3712, 224); //Coluna 116, Linha 7
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4128, 352); //Coluna 129, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4224, 224); //Coluna 132, Linha 7
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4224, 352); //Coluna 132, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4320, 352); //Coluna 135, Linha 11
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4960, 224); //Coluna 155, Linha 7
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 224); //Coluna 156, Linha 7
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 352); //Coluna 198, Linha 11
+
+}
+
+void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float positionY)
+{
+	string nomeArq = BASE_DIR + path;
+
+	insereQuestionBlocks = new CSprite();
+	insereQuestionBlocks->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 2, 1, 2);
+	insereQuestionBlocks->setScale(1);
+	insereQuestionBlocks->setPosition(positionX, positionY);
+
+	insereQuestionBlocks->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+	QuestionBlocks.push_back(insereQuestionBlocks);
+
+
 }
 
 void PlayFisicaState::MontaLayer() {
@@ -111,6 +141,10 @@ void PlayFisicaState::MontaLayer() {
 	layers->add(mapColisao,1);
 	layers->add(spriteMario,1);
 	layers->add(spriteCobra,1);
+	for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++)
+	{
+		layers->add(QuestionBlocks[nCount],1);
+	}
 
 
 }
@@ -344,6 +378,11 @@ void PlayFisicaState::handleEvents(CGame* game) {
 void PlayFisicaState::update(CGame* game) {
 
 	spriteMario->update(game->getUpdateInterval());
+	//Percorre todo o vetor de blocks para poder animar
+	for(int i=0; i < (int)QuestionBlocks.size(); i ++){ 
+		//Usado para animar os sprites
+		QuestionBlocks[i]->update(game->getUpdateInterval()); 
+	}
 
 	Fisica->step();
 
