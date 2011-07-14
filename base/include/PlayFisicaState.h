@@ -43,76 +43,85 @@ class PlayFisicaState : public CGameState
 {
     public:
 
-        void init();
-        void cleanup();
+			void init();
+			void cleanup();
 
-        void pause();
-        void resume();
+			void pause();
+			void resume();
 
-        void handleEvents(CGame* game);
-        void update(CGame* game);
-        void draw(CGame* game);
+			void handleEvents(CGame* game);
+			void update(CGame* game);
+			void draw(CGame* game);
 
-        // Implement Singleton Pattern
-        static PlayFisicaState* instance()
-        {
-            return &m_PlayState;
-        }
+			// Implement Singleton Pattern
+			static PlayFisicaState* instance()
+			{
+					return &m_PlayState;
+			}
 
 
     protected:
-        PlayFisicaState() {}
-        void CarregaTiles();
-        void CarregaSprites();
-        void MontaLayer();
-		bool TemColisaoSpriteTile(CSprite *sprite, CTilesMap *map);
-		void InitFisica();
-		void DesenhaBordaImagem(CImage* i);
-		void DesenhaLinha(b2Vec2 pontoInicial, b2Vec2 pontoFinal) ;
-		void DesenhaLinha(float x1, float y1, float x2, float y2);
-		void CriaMapDeColisao();
-		void CriaCaixa(int id, float x, float y, float w, float h);
-		void CarregaQuestionBlocks(string path, float positionX, float positionY);
+      PlayFisicaState() {}
+      void CarregaTiles();
+      void CarregaSprites();
+      void MontaLayer();
+			bool TemColisaoSpriteTile(CSprite *sprite, CTilesMap *map);
+			void InitFisica();
+			void DesenhaBordaImagem(CImage* i);
+			void DesenhaLinha(b2Vec2 pontoInicial, b2Vec2 pontoFinal) ;
+			void DesenhaLinha(float x1, float y1, float x2, float y2);
+			void CriaMapDeColisao();
+			void CriaCaixa(int id, float x, float y, float w, float h);
+			void CarregaQuestionBlocks(string path, float positionX, float positionY);
+			void EstadosMario();
 		
     private:
-        static PlayFisicaState m_PlayState;
-        CLayerHandler *layers;
-        CTilesMap *mapFundo;
-        CTilesMap *mapColisao;
-        CSprite *spriteMario;
-		CSprite *spriteCobra;
-		CSprite *insereQuestionBlocks;
+			static PlayFisicaState m_PlayState;
+			CLayerHandler *layers;
+			CTilesMap *mapFundo;
+			CTilesMap *mapColisao;
+			CSprite *spriteMario;
+			CSprite *spriteCobra;
+			CSprite *insereQuestionBlocks;
 
-        Uint8* keystate; // state of all keys (1 means key is pressed)
+      Uint8* keystate; // state of all keys (1 means key is pressed)
 
-        int currentFrame;
-        bool done;
+			int currentFrame;
+			bool done;
 
-        string BASE_DIR;
+			string BASE_DIR;
 		
-		CPhysics* Fisica;
-		b2Body* fisicaMario;
-		b2Body* fisicaPiso;
-		b2Body* fisicaCobra;
+			CPhysics* Fisica;
+			b2Body* fisicaMario;
+			b2Body* fisicaPiso;
+			b2Body* fisicaCobra;
 		
-		enum {
-        MARIO_ID, COBRA_ID, OBSTACULO1, BOLA, 
-		};
+			enum {
+				MARIO_ID, COBRA_ID, OBSTACULO1, BOLA, 
+			};
 
-		//enum para verificar qual ação o Mario está fazendo
-		enum ACOES_MARIO {
-        PULANDO, CAMINHANDO, CORRENDO
-		}; ACOES_MARIO AcaoMario;
+			//enum para verificar qual ação o Mario está fazendo
+			enum ACOES_MARIO {
+					PULANDO, CAMINHANDO, CORRENDO
+			}; ACOES_MARIO AcaoMario;
+			
+			//enum que seta os estados do Mario
+			enum ESTADOS_MARIO {
+				INICIAL, COGUMELO, FLOR, MORTE 
+			}; ESTADOS_MARIO VarEstadosMario;
+			
+			//seta o tipo do item que vai cair dos QuestionBlocks: se for 1 == cogumelo se 2 == flor
+			int tipoItem;
+			
+			vector<CSprite *> QuestionBlocks;
 
-		vector<CSprite *> QuestionBlocks;
-
-		//impede que o Mario dê dois pulos quando já está no ar
-		bool estaPulando;
+			//impede que o Mario dê dois pulos quando já está no ar
+			bool estaPulando;
 		
-		b2Vec2 Direcao;
-		b2Vec2 PontoFinal;
-		
-		b2RevoluteJoint* joint; 
+			b2Vec2 Direcao;
+			b2Vec2 PontoFinal;
+			
+			b2RevoluteJoint* joint; 
 
 		
 };

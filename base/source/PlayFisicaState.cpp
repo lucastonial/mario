@@ -134,6 +134,52 @@ void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float 
 
 }
 
+//controla os estados do mario
+void PlayFisicaState::EstadosMario(){
+	switch (VarEstadosMario) {
+		case INICIAL:
+			cout << "inicial";
+			//se colidir com inimigo: VarEstadosMario = MORTE;
+			//se colidir com cogumelo: VarEstadosMario = COGUMELO e modifica sprite para maior e seta tipo do item dos blocos para flor;
+			break;
+		case COGUMELO:
+			cout << "cogumelo";
+			//se colidir com inimigo: VarEstadosMario = INICIAL e modifica sprite para menor e seta o tipo do item dos blocos para cogumelo;
+			//se colidir com flor: VarEstadosMario = FLOR e modifica sprite para outra cor;
+			break;
+		case FLOR:
+			cout << "flor";
+			//permissao de atirar
+			//se colidir com inimigo: VarEstadosMario = INICIAL e modifica sprite para menor e seta o tipo do item dos blocos para cogumelo;
+			//se colidir com flor: VarEstado = FLOR e vida++;
+			break;
+		case MORTE:
+			cout << "morte";
+			//finaliza o jogo
+			break;
+	}
+}
+/*
+//aqui foi feito teste dos estados do mario no events
+//aqui comeca os testes do estado do mario
+			}else if(event.key.keysym.sym == SDLK_g) {
+        VarEstadosMario = COGUMELO;  
+			}else if(event.key.keysym.sym == SDLK_m) {
+				if(VarEstadosMario == COGUMELO || VarEstadosMario == FLOR)
+					VarEstadosMario = INICIAL;
+				else if(VarEstadosMario == INICIAL)
+					VarEstadosMario = MORTE;
+			}else if(event.key.keysym.sym == SDLK_f) {
+        VarEstadosMario = FLOR;  
+			}else if(event.key.keysym.sym == SDLK_l) {
+        if(VarEstadosMario == FLOR)
+					cout << " ==== ATIRA ===== " << endl;
+				else
+					cout << " ******* NAO PODE ATIRAR ****** " << endl;
+			}
+			//aqui termina os testes do estado do mario
+
+*/
 void PlayFisicaState::MontaLayer() {
 	cout << "Monta Layers....";
 	layers = new CLayerHandler(5);
@@ -213,6 +259,7 @@ void PlayFisicaState::InitFisica() {
 	jointDef.Initialize(fisicaMario, fisicaCobra, fisicaMario->GetWorldCenter());
 
 	fisicaMario->SetFixedRotation(true);
+	
 
 }
 
@@ -229,7 +276,6 @@ void PlayFisicaState::init() {
 	CarregaTiles();
 	CarregaSprites();
 	MontaLayer();
-
 	InitFisica();
 
 	// SDL_GetTicks() tells how many milliseconds have past since an arbitrary point in the past.
@@ -240,6 +286,11 @@ void PlayFisicaState::init() {
 	estaPulando = false;
 
 	cout << "PlayFisicaState Init Successful" << endl;
+	
+	//inicializa estado do mario
+	VarEstadosMario = INICIAL;
+	//inicializa tipo do item = cogumelo
+	tipoItem = 1;
 }
 
 void PlayFisicaState::cleanup() {
@@ -281,10 +332,6 @@ void PlayFisicaState::handleEvents(CGame* game) {
 				break;
 			} else if (event.key.keysym.sym == SDLK_p)
 				game->pushState(PauseState::instance());
-			else if (event.key.keysym.sym == SDLK_a) {
-
-			}
-            
 			
 			if  (event.key.keysym.sym == SDLK_SPACE) {
 				AcaoMario = PULANDO;
@@ -322,6 +369,7 @@ void PlayFisicaState::handleEvents(CGame* game) {
 		case SDL_VIDEORESIZE:
 			game->resize(event.resize.w, event.resize.h);
 			break;
+			
 		} // end switch
 	}// end of message processing
 
@@ -399,6 +447,7 @@ void PlayFisicaState::update(CGame* game) {
 	PontoFinal = fisicaMario->GetWorldCenter();
 	Direcao = b2Vec2(10,0);
 
+	EstadosMario();
 }
 
 void PlayFisicaState::draw(CGame* game) {
