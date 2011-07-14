@@ -74,6 +74,7 @@ class PlayFisicaState : public CGameState
 			void CriaCaixa(int id, float x, float y, float w, float h);
 			void CarregaQuestionBlocks(string path, float positionX, float positionY);
 			void EstadosMario();
+			void VerificaColisaoItens();
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -113,10 +114,17 @@ class PlayFisicaState : public CGameState
 			//seta o tipo do item que vai cair dos QuestionBlocks: se for 1 == cogumelo se 2 == flor
 			int tipoItem;
 			
+			//Vetor de Question Blocks
 			vector<CSprite *> QuestionBlocks;
 
-			//impede que o Mario dê dois pulos quando já está no ar
-			bool estaPulando;
+			//Vetor de itens
+			vector<CSprite *> Itens;
+
+			//variável usada para ver se o Mario está colidingo com o mapa de tiles
+			bool estaColidindo;
+
+			//contador que permite o Mario pular, toda vez que for 0 e for pressionado a tecla de espaço
+			int tempoEsperaPulo;
 		
 			b2Vec2 Direcao;
 			b2Vec2 PontoFinal;

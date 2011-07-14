@@ -191,14 +191,14 @@ void PlayFisicaState::MontaLayer() {
 	{
 		layers->add(QuestionBlocks[nCount],1);
 	}
-
-
 }
+
+void PlayFisicaState::VerificaColisaoItens() {}
 
 void PlayFisicaState::InitFisica() {
 	// inicializa a classe de física e a Box2D
 	Fisica = CPhysics::instance();
-	b2Vec2 g(0,17);
+	b2Vec2 g(0,60);
 	Fisica->setGravity(g);
 	Fisica->setConvFactor(10);
 
@@ -282,8 +282,7 @@ void PlayFisicaState::init() {
 
 	keystate = SDL_GetKeyState(NULL); // get array of key states
 
-	currentFrame = 0;
-	estaPulando = false;
+	currentFrame = 0;;
 
 	cout << "PlayFisicaState Init Successful" << endl;
 	
@@ -291,6 +290,9 @@ void PlayFisicaState::init() {
 	VarEstadosMario = INICIAL;
 	//inicializa tipo do item = cogumelo
 	tipoItem = 1;
+
+	tempoEsperaPulo = 0; ////inicia com 0 para entrar no if do pulo
+	estaColidindo = true; //inicia como true para dizer que o personagem inicia colidindo com o chão podendo pular
 }
 
 void PlayFisicaState::cleanup() {
@@ -307,7 +309,7 @@ void PlayFisicaState::resume() {
 }
 
 bool PlayFisicaState::TemColisaoSpriteTile(CSprite *sprite, CTilesMap *map) {
-	return false;
+	return true;
 }
 
 void PlayFisicaState::handleEvents(CGame* game) {
@@ -339,24 +341,26 @@ void PlayFisicaState::handleEvents(CGame* game) {
 				b2Vec2 impulso;
 				b2Vec2 pos;
 				impulso.x = 0;
-				impulso.y = -125;
+				impulso.y = -280;
 				pos = fisicaMario->GetWorldCenter();
 				
-				if(!estaPulando){
-					fisicaMario->ApplyLinearImpulse(impulso, pos);	
-					estaPulando = true; 
+				//Se o tempo for 0 e o personagem está colidindo com o mapa de colisão ele pode pular
+				if (tempoEsperaPulo == 0)
+				{
+					cout << "Inicia pulo... " << endl;
+					
+				   if (estaColidindo)
+						fisicaMario->ApplyLinearImpulse(impulso, pos); //Punção para fazer o personagem pular
+					
+					//Seta o tempo com 45 para ser decrementado no update
+					tempoEsperaPulo = 45;
+					
 				}
+				else cout << "Ja estou pulando...." << endl;
 
-				//tempoAlterarEstado = game->getUpdateInterval()+4;
-				//if (tempoAlterarEstado > 0){
-				//	tempoAlterarEstado -= 1;
-				//	if (tempoAlterarEstado == 0)
-				//		AcaoMario = CAMINHANDO;
-				//}
-
-				break;			
+				break;		
 			}
-			estaPulando = false;
+
 			break;
 
 			// SDL_APPACTIVE: When the application is either minimized/iconified
@@ -445,9 +449,22 @@ void PlayFisicaState::update(CGame* game) {
 	//cout << "X = "<< pos.x << " Y = " << pos.y << endl;
 
 	PontoFinal = fisicaMario->GetWorldCenter();
-	Direcao = b2Vec2(10,0);
+	Direcao = b2Vec2(25,0);
 
 	EstadosMario();
+
+    // Controle do pulo do Mario		
+	if (tempoEsperaPulo > 0)
+	{
+		cout << "pulando..." << endl;
+		estaColidindo = false;
+		tempoEsperaPulo--;
+
+		if (tempoEsperaPulo == 0)
+		{
+			estaColidindo = TemColisaoSpriteTile(spriteMario, mapColisao); //Se o tempo for 0 ele já via estar colidindo com alguma coisa do mapa de colisão, logo é possível atriibuir a função TemColisaoSpriteTile que vai retornar "true"
+		}
+	}
 }
 
 void PlayFisicaState::draw(CGame* game) {
@@ -480,7 +497,7 @@ void PlayFisicaState::draw(CGame* game) {
 	b2Vec2 inicio;
 	inicio.x = fim.x - Direcao.x;
 	inicio.y = fim.y - Direcao.y;
-	DesenhaLinha( inicio,  fim);
+	//DesenhaLinha( inicio,  fim);
 
 	//cout << "Ponto Final -> X = "<< PontoFinal.x << " Y = " << PontoFinal.y << endl;
 	//cout << "Direcao -> X = "<< Direcao.x << " Y = " << Direcao.y << endl;
