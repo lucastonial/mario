@@ -73,8 +73,10 @@ class PlayFisicaState : public CGameState
 			void CriaMapDeColisao();
 			void CriaCaixa(int id, float x, float y, float w, float h);
 			void CarregaQuestionBlocks(string path, float positionX, float positionY);
+			void CarregaItens(string path, float positionX, float positionY);
 			void EstadosMario();
-			void VerificaColisaoItens();
+			void AcionaItens();
+			void VerificaColisaoQuestionBlocks();
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -84,6 +86,7 @@ class PlayFisicaState : public CGameState
 			CSprite *spriteMario;
 			CSprite *spriteCobra;
 			CSprite *insereQuestionBlocks;
+			CSprite *insereItem;
 
       Uint8* keystate; // state of all keys (1 means key is pressed)
 
@@ -122,6 +125,9 @@ class PlayFisicaState : public CGameState
 
 			//variável usada para ver se o Mario está colidingo com o mapa de tiles
 			bool estaColidindo;
+
+			//variável para controlar a colisão entre Sprites
+			bool colisao;
 
 			//contador que permite o Mario pular, toda vez que for 0 e for pressionado a tecla de espaço
 			int tempoEsperaPulo;

@@ -117,6 +117,8 @@ void PlayFisicaState::CarregaSprites() {
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 224); //Coluna 156, Linha 7
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 352); //Coluna 198, Linha 11
 
+	CarregaItens("data/img/QuestionBlocks.png", 200, 352);
+
 }
 
 void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float positionY)
@@ -134,6 +136,19 @@ void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float 
 
 }
 
+void PlayFisicaState::CarregaItens(string path, float positionX, float positionY)
+{
+	string nomeArq = BASE_DIR + path;
+
+	insereItem = new CSprite();
+	insereItem->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 2, 1, 2);
+	insereItem->setScale(1);
+	insereItem->setPosition(positionX, positionY);
+
+	insereItem->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+	Itens.push_back(insereItem);
+
+}
 //controla os estados do mario
 void PlayFisicaState::EstadosMario(){
 	switch (VarEstadosMario) {
@@ -193,7 +208,45 @@ void PlayFisicaState::MontaLayer() {
 	}
 }
 
-void PlayFisicaState::VerificaColisaoItens() {}
+//void PlayFisicaState::AcionaItens() 
+//{
+//
+//	vector<CSprite *>::iterator itItens;
+//	vector<int>::iterator cont;
+//
+//		for(int i=0; i<Itens.size(); i++)
+//	    {
+//			float x = Itens[i].
+//			float y = Itens[i].getY();
+//
+//			for(itItens = Itens.begin(); itItens != Itens.end(); itItens++){ 
+//
+//				CSprite *auxItens = *itItens;
+//				//Se entrar nesse IF é porque aconteceu a colisão
+//				if (auxItens->getX()<x && x<(auxItens->getX()+auxItens->getWidth())){
+//					if (auxItens->getY()<y && y<(auxItens->getY()+auxItens->getHeight())){
+//
+//					//COLIDIU
+//                    //remove o item do vetor e da camada
+//					layers->remove(*itItens);
+//					Itens.erase(itItens);
+//					}
+//				}
+//			}
+//		}
+//	}
+//}
+
+
+
+
+void PlayFisicaState::VerificaColisaoQuestionBlocks()
+{
+	//for (int nCount = 0; nCount < QuestionBlocks.size(); nCount ++){
+	//	colisao = spriteMario->bboxCollision(QuestionBlocks[nCount]);
+	//	if(colisao)
+	//}
+}
 
 void PlayFisicaState::InitFisica() {
 	// inicializa a classe de física e a Box2D
@@ -293,6 +346,7 @@ void PlayFisicaState::init() {
 
 	tempoEsperaPulo = 0; ////inicia com 0 para entrar no if do pulo
 	estaColidindo = true; //inicia como true para dizer que o personagem inicia colidindo com o chão podendo pular
+	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
 }
 
 void PlayFisicaState::cleanup() {
@@ -398,16 +452,23 @@ void PlayFisicaState::handleEvents(CGame* game) {
 
 		if(AcaoMario != PULANDO)
 		{	
- 			fisicaMario->ApplyLinearImpulse(Direcao, PontoFinal);
+			fisicaMario->ApplyLinearImpulse(Direcao, PontoFinal);
 		}
 
-			spriteMario->setMirror(false);
-			cout << "aplicando impulso DIR...."<< endl ;
-			spriteMario->setFrameRange(0,1);
-			//game->setXpan(game->getXpan()+1.5);
-			//game->updateCamera();
-			AcaoMario = CAMINHANDO;
-				
+		spriteMario->setMirror(false);
+		cout << "aplicando impulso DIR...."<< endl ;
+		spriteMario->setFrameRange(0,1);
+		//game->setXpan(game->getXpan()+1.5);
+		//game->updateCamera();
+		AcaoMario = CAMINHANDO;
+
+		//for(int nCount = 0; nCount < Itens.size(); nCount ++){
+		//	colisao = spriteMario->bboxCollision(Itens);
+		//	if(colisao){
+		//		AcionaItens();
+		//	}
+		//}
+
 	}
 	
 
