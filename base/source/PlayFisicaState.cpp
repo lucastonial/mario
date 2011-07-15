@@ -191,8 +191,16 @@ void PlayFisicaState::VerificaColisao(CSprite *inimigo){
 			VarTipoColisao = LADO;
 		}
 	}
+}
 
-
+void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock){	
+	//colisao baixo
+	if(questionBlock->getX()<(spriteMario->getX()) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth()-30)){
+		if(questionBlock->getY()<(spriteMario->getY()+100) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight())){
+			cout << "****BAIXO****" << endl;
+			VarTipoColisao = BAIXO;
+		}
+	}
 }
 
 //controla os estados do mario
@@ -269,14 +277,6 @@ void PlayFisicaState::MontaLayer() {
 		layers->add(Itens[nCount],1);
 	}
 	
-}
-
-void PlayFisicaState::VerificaColisaoQuestionBlocks()
-{
-	//for (int nCount = 0; nCount < QuestionBlocks.size(); nCount ++){
-	//	colisao = spriteMario->bboxCollision(QuestionBlocks[nCount]);
-	//	if(colisao)
-	//}
 }
 
 void PlayFisicaState::InitFisica() {
@@ -574,6 +574,11 @@ void PlayFisicaState::update(CGame* game) {
 		for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
 			VerificaColisao(VetInimigos[nCount]);
 		}
+		
+		for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++){
+			VerificaColisaoQuestionBlocks(QuestionBlocks[nCount]);
+		}
+		
 }
 
 void PlayFisicaState::draw(CGame* game) {
