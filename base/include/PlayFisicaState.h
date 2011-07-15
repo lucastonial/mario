@@ -73,10 +73,12 @@ class PlayFisicaState : public CGameState
 			void CriaMapDeColisao();
 			void CriaCaixa(int id, float x, float y, float w, float h);
 			void CarregaQuestionBlocks(string path, float positionX, float positionY);
+			void CarregaInimigos(string path, float positionX, float positionY);
 			void CarregaItens(string path, float positionX, float positionY);
 			void EstadosMario();
 			void AcionaItens();
 			void VerificaColisaoQuestionBlocks();
+			void VerificaColisao(CSprite *inimigo);
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -85,6 +87,7 @@ class PlayFisicaState : public CGameState
 			CTilesMap *mapColisao;
 			CSprite *spriteMario;
 			CSprite *spriteCobra;
+			CSprite *spriteInimigos;
 			CSprite *insereQuestionBlocks;
 			CSprite *insereItem;
 
@@ -109,6 +112,11 @@ class PlayFisicaState : public CGameState
 					PULANDO, CAMINHANDO, CORRENDO
 			}; ACOES_MARIO AcaoMario;
 			
+			//enum que seta o tipo de colisao
+			enum TIPO_COLISAO {
+				CIMA, BAIXO, LADO
+			}; TIPO_COLISAO VarTipoColisao;
+			
 			//enum que seta os estados do Mario
 			enum ESTADOS_MARIO {
 				INICIAL, COGUMELO, FLOR, MORTE 
@@ -119,6 +127,8 @@ class PlayFisicaState : public CGameState
 			
 			//Vetor de Question Blocks
 			vector<CSprite *> QuestionBlocks;
+			
+			vector<CSprite *> VetInimigos;
 
 			//Vetor de itens
 			vector<CSprite *> Itens;

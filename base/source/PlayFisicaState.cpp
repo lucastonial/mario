@@ -102,6 +102,15 @@ void PlayFisicaState::CarregaSprites() {
 	spriteCobra->setPosition(300, 250);
 	spriteCobra->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
 
+	//Chama o método para carregar os inimigos
+	CarregaInimigos("data/img/char2.png", 600, 395);
+	CarregaInimigos("data/img/char2.png", 1000, 395);
+	CarregaInimigos("data/img/char2.png", 1500, 395);
+	CarregaInimigos("data/img/char2.png", 2000, 395);
+	CarregaInimigos("data/img/char2.png", 2500, 395);
+	
+	
+	
 	//Chama o método para carregar os Question Blocks - Ordem de aparecimento pelo X (coluna)
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 768, 352); //Coluna 24, Linha 11
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 928, 352); //Coluna 29, Linha 11
@@ -136,6 +145,21 @@ void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float 
 
 }
 
+void PlayFisicaState::CarregaInimigos(string path, float positionX, float positionY)
+{
+	string nomeArq = BASE_DIR + path;
+
+	spriteInimigos = new CSprite();
+	spriteInimigos->loadSprite(nomeArq.c_str(), 128, 82, 0, 46, 0, 53, 4, 2, 7);
+	spriteInimigos->setScale(1);
+	spriteInimigos->setPosition(positionX, positionY);
+
+	spriteInimigos->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+	VetInimigos.push_back(spriteInimigos);
+
+
+}
+
 void PlayFisicaState::CarregaItens(string path, float positionX, float positionY)
 {
 	string nomeArq = BASE_DIR + path;
@@ -149,21 +173,50 @@ void PlayFisicaState::CarregaItens(string path, float positionX, float positionY
 	Itens.push_back(insereItem);
 
 }
+
+//verifica colisao do mario
+void PlayFisicaState::VerificaColisao(CSprite *inimigo){
+	//colisao cima
+	if(inimigo->getX()<spriteMario->getX() && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()-30)){
+		if(inimigo->getY()<(spriteMario->getY()+50) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight()-50)){
+			cout << "****CIMA****" << endl;
+			layers->remove(inimigo);
+			VarTipoColisao = CIMA;
+		}
+	}
+	//colisao lado
+	if(inimigo->getX()<(spriteMario->getX()+30) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
+		if(inimigo->getY()<spriteMario->getY() && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
+			cout << "****LADO****" << endl;
+			VarTipoColisao = LADO;
+		}
+	}
+
+
+}
+
 //controla os estados do mario
 void PlayFisicaState::EstadosMario(){
 	switch (VarEstadosMario) {
 		case INICIAL:
 			cout << "inicial";
+			if(VarTipoColisao == LADO)
+				VarEstadosMario = MORTE;
+			//bool teste = spriteMario->bboxCollision(spriteCobra); //colisao exemplo
 			//se colidir com inimigo: VarEstadosMario = MORTE;
 			//se colidir com cogumelo: VarEstadosMario = COGUMELO e modifica sprite para maior e seta tipo do item dos blocos para flor;
 			break;
 		case COGUMELO:
 			cout << "cogumelo";
+			if(VarTipoColisao == LADO)
+				VarEstadosMario = INICIAL;
 			//se colidir com inimigo: VarEstadosMario = INICIAL e modifica sprite para menor e seta o tipo do item dos blocos para cogumelo;
 			//se colidir com flor: VarEstadosMario = FLOR e modifica sprite para outra cor;
 			break;
 		case FLOR:
 			cout << "flor";
+			if(VarTipoColisao == LADO)
+				VarEstadosMario = INICIAL;
 			//permissao de atirar
 			//se colidir com inimigo: VarEstadosMario = INICIAL e modifica sprite para menor e seta o tipo do item dos blocos para cogumelo;
 			//se colidir com flor: VarEstado = FLOR e vida++;
@@ -205,6 +258,10 @@ void PlayFisicaState::MontaLayer() {
 	for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++)
 	{
 		layers->add(QuestionBlocks[nCount],1);
+	}
+	
+	for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
+		layers->add(VetInimigos[nCount],1);
 	}
 }
 
@@ -526,6 +583,10 @@ void PlayFisicaState::update(CGame* game) {
 			estaColidindo = TemColisaoSpriteTile(spriteMario, mapColisao); //Se o tempo for 0 ele já via estar colidindo com alguma coisa do mapa de colisão, logo é possível atriibuir a função TemColisaoSpriteTile que vai retornar "true"
 		}
 	}
+	
+		for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
+			VerificaColisao(VetInimigos[nCount]);
+		}
 }
 
 void PlayFisicaState::draw(CGame* game) {
