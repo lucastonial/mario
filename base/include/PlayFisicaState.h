@@ -76,7 +76,6 @@ class PlayFisicaState : public CGameState
 			void CarregaInimigos(string path, float positionX, float positionY);
 			void CarregaItens(string path, float positionX, float positionY);
 			void EstadosMario();
-			void AcionaItens();
 			void VerificaColisaoQuestionBlocks();
 			void VerificaColisao(CSprite *inimigo);
 		

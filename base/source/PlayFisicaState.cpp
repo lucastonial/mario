@@ -126,7 +126,7 @@ void PlayFisicaState::CarregaSprites() {
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 224); //Coluna 156, Linha 7
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 352); //Coluna 198, Linha 11
 
-	CarregaItens("data/img/QuestionBlocks.png", 200, 352);
+	CarregaItens("data/img/Mashroom.png", 928, 320); //Coluna 29, Linha 10
 
 }
 
@@ -135,11 +135,11 @@ void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float 
 	string nomeArq = BASE_DIR + path;
 
 	insereQuestionBlocks = new CSprite();
-	insereQuestionBlocks->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 2, 1, 2);
+	insereQuestionBlocks->loadSprite(nomeArq.c_str(), 31, 32, 0, 0, 0, 0, 2, 1, 2);
 	insereQuestionBlocks->setScale(1);
 	insereQuestionBlocks->setPosition(positionX, positionY);
 
-	insereQuestionBlocks->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+	insereQuestionBlocks->setAnimRate(20); // taxa de animação em frames por segundo(troca dos frames dele)
 	QuestionBlocks.push_back(insereQuestionBlocks);
 
 
@@ -165,7 +165,7 @@ void PlayFisicaState::CarregaItens(string path, float positionX, float positionY
 	string nomeArq = BASE_DIR + path;
 
 	insereItem = new CSprite();
-	insereItem->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 2, 1, 2);
+	insereItem->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 7, 1, 7);
 	insereItem->setScale(1);
 	insereItem->setPosition(positionX, positionY);
 
@@ -263,39 +263,11 @@ void PlayFisicaState::MontaLayer() {
 	for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
 		layers->add(VetInimigos[nCount],1);
 	}
-}
-
-//void PlayFisicaState::AcionaItens() 
-//{
-//
-//	vector<CSprite *>::iterator itItens;
-//	vector<int>::iterator cont;
-//
-//		for(int i=0; i<Itens.size(); i++)
-//	    {
-//			float x = Itens[i].
-//			float y = Itens[i].getY();
-//
-//			for(itItens = Itens.begin(); itItens != Itens.end(); itItens++){ 
-//
-//				CSprite *auxItens = *itItens;
-//				//Se entrar nesse IF é porque aconteceu a colisão
-//				if (auxItens->getX()<x && x<(auxItens->getX()+auxItens->getWidth())){
-//					if (auxItens->getY()<y && y<(auxItens->getY()+auxItens->getHeight())){
-//
-//					//COLIDIU
-//                    //remove o item do vetor e da camada
-//					layers->remove(*itItens);
-//					Itens.erase(itItens);
-//					}
-//				}
-//			}
-//		}
-//	}
-//}
-
-
-
+	
+	for(int nCount = 0; nCount < (int)Itens.size(); nCount++)
+	{
+		layers->add(Itens[nCount],1);
+	}
 
 void PlayFisicaState::VerificaColisaoQuestionBlocks()
 {
@@ -519,12 +491,19 @@ void PlayFisicaState::handleEvents(CGame* game) {
 		//game->updateCamera();
 		AcaoMario = CAMINHANDO;
 
-		//for(int nCount = 0; nCount < Itens.size(); nCount ++){
-		//	colisao = spriteMario->bboxCollision(Itens);
-		//	if(colisao){
-		//		AcionaItens();
-		//	}
-		//}
+		//Testa a colisão entre o Mario e o item
+		for(int nCount = 0; nCount < Itens.size();){
+			colisao = spriteMario->bboxCollision(Itens[nCount]);
+			if(colisao){
+				//remove o item do vetor e da camada
+				layers->remove(Itens[nCount]);
+				Itens.erase(Itens.begin()+ nCount);
+			}
+			else
+			{
+				nCount ++;
+			}
+		}
 
 	}
 	
@@ -552,6 +531,12 @@ void PlayFisicaState::update(CGame* game) {
 	for(int i=0; i < (int)QuestionBlocks.size(); i ++){ 
 		//Usado para animar os sprites
 		QuestionBlocks[i]->update(game->getUpdateInterval()); 
+	}
+
+	for(int i=0; i < (int)Itens.size(); i ++){ 
+		//Usado para animar os sprites
+		Itens[i]->update(game->getUpdateInterval()); 
+		Itens[i]->setFrameRange(6,6);
 	}
 
 	Fisica->step();
