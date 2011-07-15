@@ -268,6 +268,8 @@ void PlayFisicaState::MontaLayer() {
 	{
 		layers->add(Itens[nCount],1);
 	}
+	
+}
 
 void PlayFisicaState::VerificaColisaoQuestionBlocks()
 {
