@@ -176,14 +176,15 @@ void PlayFisicaState::CarregaItens(string path, float positionX, float positionY
 //verifica colisao do mario
 void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
 	if(!VetInimigosMortos[id]){ //aqui testa se o inimigo que está sendo testado não esta morto (quando remover do vetor de inimigos podemos tirar isso, por enquanto está ai pra testes)
-		VarTipoColisao = NADA; //começa com o tipo de colisao = nada, pois como estamos permitindo o mario entrar no inimigo devemos testar primeiro se ele colidiu de lado
 		//colisao lado
 		if(inimigo->getX()<(spriteMario->getX()+20) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+10)){
 			if(inimigo->getY()<(spriteMario->getY()+20) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
 				cout << "****LADO****" << endl;
 				VarTipoColisao = LADO;
-			}
+			}else
+				VarTipoColisao = NADA; //se nao for Lado seta para Nada para permitir que teste se esta em cima, pois se não fizer isso ele sempre vai entrar no teste de cima
 		}
+			
 		if(VarTipoColisao != LADO){ // se não colidiu de lado permitimos o teste para colisao de cima, ai não tem perigo de morrer e depois matar
 			//colisao cima
 			if(inimigo->getX()<(spriteMario->getX()+10) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
@@ -201,7 +202,7 @@ void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
 
 void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock){	
 	//colisao baixo
-	if(questionBlock->getX()<(spriteMario->getX()+20) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth()+10)){
+	if(questionBlock->getX()<(spriteMario->getX()) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth())){
 		if(questionBlock->getY()<(spriteMario->getY()) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight()+2)){
 			cout << "****BAIXO****" << endl;
 			layers->remove(questionBlock);
@@ -568,8 +569,6 @@ void PlayFisicaState::update(CGame* game) {
 	PontoFinal = fisicaMario->GetWorldCenter();
 	Direcao = b2Vec2(25,0);
 
-	EstadosMario();
-
     // Controle do pulo do Mario		
 	if (tempoEsperaPulo > 0)
 	{
@@ -586,6 +585,8 @@ void PlayFisicaState::update(CGame* game) {
 		for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
 			VerificaColisao(VetInimigos[nCount], nCount);
 		}
+		
+		EstadosMario();
 		
 		for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++){
 			VerificaColisaoQuestionBlocks(QuestionBlocks[nCount]);
