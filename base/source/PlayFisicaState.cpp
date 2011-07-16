@@ -103,11 +103,11 @@ void PlayFisicaState::CarregaSprites() {
 	spriteCobra->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
 
 	//Chama o método para carregar os inimigos
-	CarregaInimigos("data/img/char2.png", 600, 395);
-	CarregaInimigos("data/img/char2.png", 1000, 395);
-	CarregaInimigos("data/img/char2.png", 1500, 395);
-	CarregaInimigos("data/img/char2.png", 2000, 395);
-	CarregaInimigos("data/img/char2.png", 2500, 395);
+	CarregaInimigos("data/img/QuestionBlocks.png", 600, 450);
+	CarregaInimigos("data/img/QuestionBlocks.png", 1000, 450);
+	CarregaInimigos("data/img/QuestionBlocks.png", 1500, 450);
+	CarregaInimigos("data/img/QuestionBlocks.png", 2000, 450);
+	CarregaInimigos("data/img/QuestionBlocks.png", 2500, 450);
 	
 	
 	
@@ -150,13 +150,12 @@ void PlayFisicaState::CarregaInimigos(string path, float positionX, float positi
 	string nomeArq = BASE_DIR + path;
 
 	spriteInimigos = new CSprite();
-	spriteInimigos->loadSprite(nomeArq.c_str(), 128, 82, 0, 46, 0, 53, 4, 2, 7);
+	spriteInimigos->loadSprite(nomeArq.c_str(), 31, 32, 0, 0, 0, 0, 2, 1, 2);
 	spriteInimigos->setScale(1);
 	spriteInimigos->setPosition(positionX, positionY);
 
 	spriteInimigos->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
 	VetInimigos.push_back(spriteInimigos);
-
 
 }
 
@@ -175,29 +174,37 @@ void PlayFisicaState::CarregaItens(string path, float positionX, float positionY
 }
 
 //verifica colisao do mario
-void PlayFisicaState::VerificaColisao(CSprite *inimigo){
-	//colisao cima
-	if(inimigo->getX()<spriteMario->getX() && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()-30)){
-		if(inimigo->getY()<(spriteMario->getY()+50) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight()-50)){
-			cout << "****CIMA****" << endl;
-			layers->remove(inimigo);
-			VarTipoColisao = CIMA;
+void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
+	if(!VetInimigosMortos[id]){ //aqui testa se o inimigo que está sendo testado não esta morto (quando remover do vetor de inimigos podemos tirar isso, por enquanto está ai pra testes)
+		VarTipoColisao = NADA; //começa com o tipo de colisao = nada, pois como estamos permitindo o mario entrar no inimigo devemos testar primeiro se ele colidiu de lado
+		//colisao lado
+		if(inimigo->getX()<(spriteMario->getX()+20) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+10)){
+			if(inimigo->getY()<(spriteMario->getY()+20) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
+				cout << "****LADO****" << endl;
+				VarTipoColisao = LADO;
+			}
 		}
-	}
-	//colisao lado
-	if(inimigo->getX()<(spriteMario->getX()+30) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
-		if(inimigo->getY()<spriteMario->getY() && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
-			cout << "****LADO****" << endl;
-			VarTipoColisao = LADO;
+		if(VarTipoColisao != LADO){ // se não colidiu de lado permitimos o teste para colisao de cima, ai não tem perigo de morrer e depois matar
+			//colisao cima
+			if(inimigo->getX()<(spriteMario->getX()+10) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
+				if((inimigo->getY())<(spriteMario->getY()+40) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
+					cout << "****CIMA****" << endl;
+					layers->remove(inimigo);
+					VetInimigosMortos[id] = true; //quando o inimigo morre é adicionado no vetor de inimigos mortos
+					VarTipoColisao = CIMA;
+				}
+			}
 		}
-	}
+	}	
+	
 }
 
 void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock){	
 	//colisao baixo
-	if(questionBlock->getX()<(spriteMario->getX()) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth()-30)){
-		if(questionBlock->getY()<(spriteMario->getY()+100) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight())){
+	if(questionBlock->getX()<(spriteMario->getX()+20) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth()+10)){
+		if(questionBlock->getY()<(spriteMario->getY()) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight()+2)){
 			cout << "****BAIXO****" << endl;
+			layers->remove(questionBlock);
 			VarTipoColisao = BAIXO;
 		}
 	}
@@ -378,6 +385,11 @@ void PlayFisicaState::init() {
 	tempoEsperaPulo = 0; ////inicia com 0 para entrar no if do pulo
 	estaColidindo = true; //inicia como true para dizer que o personagem inicia colidindo com o chão podendo pular
 	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
+	
+	for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
+			VetInimigosMortos[nCount] = false;
+	}
+	
 }
 
 void PlayFisicaState::cleanup() {
@@ -561,7 +573,7 @@ void PlayFisicaState::update(CGame* game) {
     // Controle do pulo do Mario		
 	if (tempoEsperaPulo > 0)
 	{
-		cout << "pulando..." << endl;
+		//cout << "pulando..." << endl;
 		estaColidindo = false;
 		tempoEsperaPulo--;
 
@@ -572,7 +584,7 @@ void PlayFisicaState::update(CGame* game) {
 	}
 	
 		for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
-			VerificaColisao(VetInimigos[nCount]);
+			VerificaColisao(VetInimigos[nCount], nCount);
 		}
 		
 		for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++){

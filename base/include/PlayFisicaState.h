@@ -77,7 +77,7 @@ class PlayFisicaState : public CGameState
 			void CarregaItens(string path, float positionX, float positionY);
 			void EstadosMario();
 			void VerificaColisaoQuestionBlocks(CSprite *questionBlock);
-			void VerificaColisao(CSprite *inimigo);
+			void VerificaColisao(CSprite *inimigo, int id); //passa sprite do inimigo + seu ID para poder eliminá-lo
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -113,7 +113,7 @@ class PlayFisicaState : public CGameState
 			
 			//enum que seta o tipo de colisao
 			enum TIPO_COLISAO {
-				CIMA, BAIXO, LADO
+				NADA, CIMA, BAIXO, LADO
 			}; TIPO_COLISAO VarTipoColisao;
 			
 			//enum que seta os estados do Mario
@@ -128,6 +128,7 @@ class PlayFisicaState : public CGameState
 			vector<CSprite *> QuestionBlocks;
 			
 			vector<CSprite *> VetInimigos;
+			bool VetInimigosMortos[5]; //aqui guarda os inimigos que morreram. Quando estiver removendo do VetInimigos podemos tirar isto.
 
 			//Vetor de itens
 			vector<CSprite *> Itens;
