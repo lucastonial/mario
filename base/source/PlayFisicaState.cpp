@@ -92,23 +92,6 @@ void PlayFisicaState::CarregaSprites() {
 
 	spriteMario->setAnimRate(4); // taxa de animação em frames por segundo(troca dos frames dele)
 	spriteMario->setScale(1.0);
-
-	nomeArq = BASE_DIR + "data/img/char2.png";
-	spriteCobra = new CSprite();
-	spriteCobra->loadSprite(nomeArq.c_str(), 128, 82, 0, 46, 0, 53, 4, 2, 7);
-	spriteCobra->setScale(1);
-	spriteCobra->setMirror(false);
-
-	spriteCobra->setPosition(300, 250);
-	spriteCobra->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
-
-	//Chama o método para carregar os inimigos
-	CarregaInimigos("data/img/QuestionBlocks.png", 600, 450);
-	CarregaInimigos("data/img/QuestionBlocks.png", 1000, 450);
-	CarregaInimigos("data/img/QuestionBlocks.png", 1500, 450);
-	CarregaInimigos("data/img/QuestionBlocks.png", 2000, 450);
-	CarregaInimigos("data/img/QuestionBlocks.png", 2500, 450);
-	
 	
 	
 	//Chama o método para carregar os Question Blocks - Ordem de aparecimento pelo X (coluna)
@@ -126,7 +109,17 @@ void PlayFisicaState::CarregaSprites() {
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 224); //Coluna 156, Linha 7
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 352); //Coluna 198, Linha 11
 
-	CarregaItens("data/img/Mashroom.png", 928, 320); //Coluna 29, Linha 10
+	//Chama o método para carregar os Goombas
+	CarregaGoomba("data/img/Goomba.png", 600, 450);
+	CarregaGoomba("data/img/Goomba.png", 1000, 450);
+	CarregaGoomba("data/img/Goomba.png", 1500, 450);
+	CarregaGoomba("data/img/Goomba.png", 2000, 450);
+	CarregaGoomba("data/img/Goomba.png", 2500, 450);
+
+
+    //Chama o método para carregar o único Koopa Troopa da fase
+	CarregaKoopaTroopas("data/img/KoopaTroopa.png", 400, 450);
+
 
 }
 
@@ -145,37 +138,118 @@ void PlayFisicaState::CarregaQuestionBlocks(string path, float positionX, float 
 
 }
 
-void PlayFisicaState::CarregaInimigos(string path, float positionX, float positionY)
+void PlayFisicaState::CarregaGoomba(string path, float positionX, float positionY)
 {
 	string nomeArq = BASE_DIR + path;
 
-	spriteInimigos = new CSprite();
-	spriteInimigos->loadSprite(nomeArq.c_str(), 31, 32, 0, 0, 0, 0, 2, 1, 2);
-	spriteInimigos->setScale(1);
-	spriteInimigos->setPosition(positionX, positionY);
+	spriteGoomba = new CSprite();
+	spriteGoomba->loadSprite(nomeArq.c_str(), 23, 32, 0, 0, 0, 0, 3, 1, 3);
+	spriteGoomba->setScale(1.3);
+	spriteGoomba->setPosition(positionX, positionY);
 
-	spriteInimigos->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
-	VetInimigos.push_back(spriteInimigos);
+	spriteGoomba->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+	VetGoomba.push_back(spriteGoomba);
 
 }
 
-void PlayFisicaState::CarregaItens(string path, float positionX, float positionY)
+
+void PlayFisicaState::CarregaKoopaTroopas(string path, float positionX, float positionY)
 {
 	string nomeArq = BASE_DIR + path;
+	
+	spriteKoopaTroopa = new CSprite();
+	spriteKoopaTroopa->loadSprite(nomeArq.c_str(), 24, 32, 0, 0, 0, 0, 6, 1, 6);
+	spriteKoopaTroopa->setScale(1.5);
+	spriteKoopaTroopa->setMirror(false);
 
-	insereItem = new CSprite();
-	insereItem->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 7, 1, 7);
-	insereItem->setScale(1);
-	insereItem->setPosition(positionX, positionY);
+	spriteKoopaTroopa->setPosition(300, 250);
+	spriteKoopaTroopa->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
 
-	insereItem->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
-	Itens.push_back(insereItem);
+}
+
+void PlayFisicaState::CarregaItens(string path, float positionX, float positionY) // booleano para assegurar que a função exute apenas uma vez
+{
+		string nomeArq = BASE_DIR + path;
+
+		insereItem = new CSprite();
+		insereItem->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 7, 1, 7);
+		insereItem->setScale(1);
+		insereItem->setPosition(positionX, positionY);
+
+		insereItem->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+		Itens.push_back(insereItem);
+
+
+}
+
+void PlayFisicaState::InicializaFisicaMushroons()
+{
+
+#define MUSHROOM
+#ifdef MUSHROOM
+
+	//INICIALIZAÇÃO (CRIA CAIXAS DE FÍSICA PARA OS MUSHROONS)
+	for (int nCount = 0; nCount < Itens.size(); nCount++){
+		auxiliar = Itens[nCount];
+		fisicaMushroom = Fisica->newBoxImage(MUSHROOM_ID,    //int id,
+			auxiliar,                // CImage* sprite,
+			1,                // float density,
+			0.3,            // float friction,
+			0.2,            // float restitution
+			0.5,			 // float linearDamping
+			0.5,			 // float angularDamping
+			false);        // bool staticObj=false
+		vectorFisicaMushroom.push_back(fisicaMushroom);	
+	}
+#endif
+	
+}
+
+void PlayFisicaState::InicializaFisicaGoombas()
+{
+
+#define GOOMBA
+#ifdef GOOMBA
+
+	//INICIALIZAÇÃO (CRIA CAIXAS DE FÍSICA PARA OS MUSHROONS)
+	for (int nCount = 0; nCount < VetGoomba.size(); nCount++){
+		auxiliar = VetGoomba[nCount];
+		fisicaGoomba = Fisica->newBoxImage(MUSHROOM_ID,    //int id,
+			auxiliar,                // CImage* sprite,
+			1,                // float density,
+			0.3,            // float friction,
+			0.2,            // float restitution
+			0.5,			 // float linearDamping
+			0.5,			 // float angularDamping
+			false);        // bool staticObj=false
+		vectorFisicaGoombas.push_back(fisicaGoomba);
+	}
+#endif
+	
+}
+
+
+void PlayFisicaState::InicializaFisicaKoopaTroopa()
+{
+
+#define KOOPATROOPA
+#ifdef KOOPATROOPA
+	auxiliar = spriteKoopaTroopa;
+	fisicaKoopaTroopa = Fisica->newBoxImage(KOOPATROOPA_ID,    //int id,
+		auxiliar,                // CImage* sprite,
+		1,                // float density,
+		0.3,            // float friction,
+		0.2,            // float restitution
+		0.5,			 // float linearDamping
+		0.5,			 // float angularDamping
+		false);        // bool staticObj=false
+#endif
 
 }
 
 //verifica colisao do mario
 void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
-	if(!VetInimigosMortos[id]){ //aqui testa se o inimigo que está sendo testado não esta morto (quando remover do vetor de inimigos podemos tirar isso, por enquanto está ai pra testes)
+	if(!VetGoombaMortos[id]){ //aqui testa se o inimigo que está sendo testado não esta morto (quando remover do vetor de inimigos podemos tirar isso, por enquanto está ai pra testes)
 		//colisao lado
 		if(inimigo->getX()<(spriteMario->getX()+20) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+10)){
 			if(inimigo->getY()<(spriteMario->getY()+20) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
@@ -191,8 +265,25 @@ void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
 				if((inimigo->getY())<(spriteMario->getY()+40) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
 					cout << "****CIMA****" << endl;
 					layers->remove(inimigo);
-					VetInimigosMortos[id] = true; //quando o inimigo morre é adicionado no vetor de inimigos mortos
+					VetGoombaMortos[id] = true; //quando o inimigo morre é adicionado no vetor de inimigos mortos
 					VarTipoColisao = CIMA;
+					
+					//FAZER O TRATAMENTO PARA EXCLUIR OS INIMIGOS MORTOS
+					//Testa a colisão entre o Mario e o Goomba
+					//for(int nCount = 0; nCount < VetGoomba.size(); nCount++){
+						//if(VarTipoColisao = CIMA){
+							//remove o item do vetor e da camada
+							//fisicaGoomba[id].SetActive(false);
+							//layers->remove(VetGoomba[id]);
+							//VetGoomba.erase(VetGoomba.begin()+ id);
+
+						//}
+					//	else
+					//	{
+					//		nCount ++;
+					//	}
+				//	}
+
 				}
 			}
 		}
@@ -200,13 +291,33 @@ void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
 	
 }
 
-void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock){	
+void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador){	
 	//colisao baixo
 	if(questionBlock->getX()<(spriteMario->getX()) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth())){
 		if(questionBlock->getY()<(spriteMario->getY()) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight()+2)){
 			cout << "****BAIXO****" << endl;
 			layers->remove(questionBlock);
 			VarTipoColisao = BAIXO;
+			cout << identificador << endl;
+
+			//Se colide com o questionblock[1] carrega esse cogumelo
+			if (identificador == 1) 
+			    CarregaItens("data/img/Mushroom.png", 928, 320); //Coluna 29, Linha 10
+			else if (identificador == 4) //Se colide com o questionblock[4] carrega esse cogumelo
+				CarregaItens("data/img/Mushroom.png", 3104, 320); //Coluna 97, Linha 10
+			else if (identificador == 8) //Se colide com o questionblock[8] carrega esse cogumelo
+				CarregaItens("data/img/Mushroom.png", 4224, 320); //Coluna 132, Linha 6
+
+			//ADICIONA OS SPRITES DOS MUSHROONS NAS CAMADAS
+			for(int nCount = 0; nCount < (int)Itens.size(); nCount++)
+			{
+				layers->add(Itens[nCount],1);
+			}
+
+			//CHAMA A FUNÇÃO PARA CRIAR AS CAIXAS DE FÍSICA
+			InicializaFisicaMushroons();
+
+
 		}
 	}
 }
@@ -218,7 +329,7 @@ void PlayFisicaState::EstadosMario(){
 			cout << "inicial";
 			if(VarTipoColisao == LADO)
 				VarEstadosMario = MORTE;
-			//bool teste = spriteMario->bboxCollision(spriteCobra); //colisao exemplo
+			//bool teste = spriteMario->bboxCollision(spriteKoopaTroopa); //colisao exemplo
 			//se colidir com inimigo: VarEstadosMario = MORTE;
 			//se colidir com cogumelo: VarEstadosMario = COGUMELO e modifica sprite para maior e seta tipo do item dos blocos para flor;
 			break;
@@ -270,20 +381,20 @@ void PlayFisicaState::MontaLayer() {
 	layers->add(mapFundo,0);
 	layers->add(mapColisao,1);
 	layers->add(spriteMario,1);
-	layers->add(spriteCobra,1);
+	layers->add(spriteKoopaTroopa,1);
 	for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++)
 	{
 		layers->add(QuestionBlocks[nCount],1);
 	}
 	
-	for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
-		layers->add(VetInimigos[nCount],1);
+	for(int nCount = 0; nCount < (int)VetGoomba.size(); nCount++){
+		layers->add(VetGoomba[nCount],1);
 	}
 	
-	for(int nCount = 0; nCount < (int)Itens.size(); nCount++)
-	{
-		layers->add(Itens[nCount],1);
-	}
+	//for(int nCount = 0; nCount < (int)Itens.size(); nCount++)
+	//{
+	//	layers->add(Itens[nCount],1);
+	//}
 	
 }
 
@@ -308,47 +419,18 @@ void PlayFisicaState::InitFisica() {
 	                                false);        // bool staticObj=false
 #endif
 
-#define COBRA
-#ifdef COBRA
-	s = spriteCobra;
-	fisicaCobra = Fisica->newBoxImage(COBRA_ID,    //int id,
-	                                  s,                // CImage* sprite,
-	                                  1,                // float density,
-	                                  0.3,            // float friction,
-	                                  0.2,            // float restitution
-	                                  0.5,			 // float linearDamping
-	                                  0.5,			 // float angularDamping
-	                                  false);        // bool staticObj=false
-#endif
-	//Fisica->newBox(OBSTACULO1,    //int id,
-	//               s->getX() + s->getWidth()*1.4, //pos x
-	//               s->getY() ,            // pos y
-	//               s->getWidth()/2,                // width
-	//               s->getHeight(),            // height
-	//               0,                // rotation
-	//               1,              // float density,
-	//               0.2,            // float friction,
-	//               0.5,            // float restitution
-	//               0.5,                // float linearDamping
-	//               0.5,                // float angularDamping
-	//               false);          // bool staticObj=false
+	
+	//INICIALIZAÇÃO (CRIA CAIXAS DE FÍSICA PARA OS GOOMBAS)
+	InicializaFisicaGoombas();
 
-	//Fisica->newCircle(BOLA,
-	//                  s->getX() + s->getWidth(),
-	//                  s->getY() + s->getHeight()+ 30,
-	//                  15, 			   // float radius
-	//                  1,              // float density,
-	//                  1.0,            // float friction,
-	//                  0.5,            // float restitution
-	//                  0.5,            // float linearDamping
-	//                  0.5,            // float angularDamping
-	//                  false);         // bool staticObj=false
+	//INICIALIZAÇÃO (CRIA CAIXAS DE FÍSICA PARA OS KOOPATROOPA)
+	InicializaFisicaKoopaTroopa();
 
 	CriaMapDeColisao();
 	
 
 	b2RevoluteJointDef jointDef;
-	jointDef.Initialize(fisicaMario, fisicaCobra, fisicaMario->GetWorldCenter());
+	jointDef.Initialize(fisicaMario,fisicaKoopaTroopa, fisicaMario->GetWorldCenter());
 
 	fisicaMario->SetFixedRotation(true);
 	
@@ -369,6 +451,7 @@ void PlayFisicaState::init() {
 	CarregaSprites();
 	MontaLayer();
 	InitFisica();
+	
 
 	// SDL_GetTicks() tells how many milliseconds have past since an arbitrary point in the past.
 
@@ -380,6 +463,10 @@ void PlayFisicaState::init() {
 	
 	//inicializa estado do mario
 	VarEstadosMario = INICIAL;
+    
+	//inicializa a variável de colisão do Mario (define o lado que ele colide com os inimigos
+	VarTipoColisao = NADA;
+
 	//inicializa tipo do item = cogumelo
 	tipoItem = 1;
 
@@ -387,8 +474,8 @@ void PlayFisicaState::init() {
 	estaColidindo = true; //inicia como true para dizer que o personagem inicia colidindo com o chão podendo pular
 	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
 	
-	for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
-			VetInimigosMortos[nCount] = false;
+	for(int nCount = 0; nCount < (int)VetGoomba.size(); nCount++){
+			VetGoombaMortos[nCount] = false;
 	}
 	
 }
@@ -413,6 +500,14 @@ bool PlayFisicaState::TemColisaoSpriteTile(CSprite *sprite, CTilesMap *map) {
 void PlayFisicaState::handleEvents(CGame* game) {
 	SDL_Event event;
 
+	//ESSA FUNÇÃO PRECISA ESTAR AQUI PARA CARREGAR APENAS 1 COGUMELO A CADA COLISÃO. 
+	//SE FICAR NO UPDATE SÃO CARREGADOS 3 COGUMELOS POR VEZ (O QUE É ERRADO)
+	for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++){
+
+		VerificaColisaoQuestionBlocks(QuestionBlocks[nCount], nCount);		
+	}
+
+
 	spriteMario->setFrameRange(0,0);
 	
 	while (SDL_PollEvent(&event)) {
@@ -432,6 +527,9 @@ void PlayFisicaState::handleEvents(CGame* game) {
 				break;
 			} else if (event.key.keysym.sym == SDLK_p)
 				game->pushState(PauseState::instance());
+			else if (event.key.keysym.sym == SDLK_b){
+				fisicaKoopaTroopa->SetActive(false);
+			}
 			
 			if  (event.key.keysym.sym == SDLK_SPACE) {
 				AcaoMario = PULANDO;
@@ -455,6 +553,7 @@ void PlayFisicaState::handleEvents(CGame* game) {
 					
 				}
 				else cout << "Ja estou pulando...." << endl;
+
 
 				break;		
 			}
@@ -506,20 +605,6 @@ void PlayFisicaState::handleEvents(CGame* game) {
 		//game->updateCamera();
 		AcaoMario = CAMINHANDO;
 
-		//Testa a colisão entre o Mario e o item
-		for(int nCount = 0; nCount < Itens.size();){
-			colisao = spriteMario->bboxCollision(Itens[nCount]);
-			if(colisao){
-				//remove o item do vetor e da camada
-				layers->remove(Itens[nCount]);
-				Itens.erase(Itens.begin()+ nCount);
-			}
-			else
-			{
-				nCount ++;
-			}
-		}
-
 	}
 	
 
@@ -554,9 +639,21 @@ void PlayFisicaState::update(CGame* game) {
 		Itens[i]->setFrameRange(6,6);
 	}
 
+
+
+	for(int i=0; i < (int)VetGoomba.size(); i ++){ 
+		//Usado para animar os sprites
+		VetGoomba[i]->update(game->getUpdateInterval()); 
+		VetGoomba[i]->setFrameRange(0,1);
+	}
+
+	spriteKoopaTroopa->update(game->getUpdateInterval());
+	spriteKoopaTroopa->setFrameRange(0,1);
+
+
 	Fisica->step();
 
-	if (Fisica->haveContact(OBSTACULO1+1, MARIO_ID)) {
+	if (Fisica->haveContact(KOOPATROOPA_ID+1, MARIO_ID)) {
 		cout << "Contato !!!"<< endl;
 	}
 	game->setXpan(spriteMario->getX()-150);
@@ -567,7 +664,7 @@ void PlayFisicaState::update(CGame* game) {
 	//cout << "X = "<< pos.x << " Y = " << pos.y << endl;
 
 	PontoFinal = fisicaMario->GetWorldCenter();
-	Direcao = b2Vec2(25,0);
+	Direcao = b2Vec2(55,0);
 
     // Controle do pulo do Mario		
 	if (tempoEsperaPulo > 0)
@@ -582,14 +679,28 @@ void PlayFisicaState::update(CGame* game) {
 		}
 	}
 	
-		for(int nCount = 0; nCount < (int)VetInimigos.size(); nCount++){
-			VerificaColisao(VetInimigos[nCount], nCount);
+		for(int nCount = 0; nCount < (int)VetGoomba.size(); nCount++){
+			VerificaColisao(VetGoomba[nCount], nCount);
 		}
+
+
 		
-		EstadosMario();
-		
-		for(int nCount = 0; nCount < (int)QuestionBlocks.size(); nCount++){
-			VerificaColisaoQuestionBlocks(QuestionBlocks[nCount]);
+		EstadosMario();	
+
+		//Testa a colisão entre o Mario e o item
+		for(int nCount = 0; nCount < Itens.size();){
+			colisao = spriteMario->bboxCollision(Itens[nCount]);
+			if(colisao){
+				//remove o item do vetor e da camada
+				fisicaMushroom[nCount].SetActive(false);
+				layers->remove(Itens[nCount]);
+				Itens.erase(Itens.begin()+ nCount);
+
+			}
+			else
+			{
+				nCount ++;
+			}
 		}
 		
 }

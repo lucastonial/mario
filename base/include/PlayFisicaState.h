@@ -73,10 +73,14 @@ class PlayFisicaState : public CGameState
 			void CriaMapDeColisao();
 			void CriaCaixa(int id, float x, float y, float w, float h);
 			void CarregaQuestionBlocks(string path, float positionX, float positionY);
-			void CarregaInimigos(string path, float positionX, float positionY);
+			void CarregaGoomba(string path, float positionX, float positionY);
+			void CarregaKoopaTroopas(string path, float positionX, float positionY);
 			void CarregaItens(string path, float positionX, float positionY);
+			void InicializaFisicaMushroons();
+			void InicializaFisicaGoombas();
+			void InicializaFisicaKoopaTroopa();
 			void EstadosMario();
-			void VerificaColisaoQuestionBlocks(CSprite *questionBlock);
+			void VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador);
 			void VerificaColisao(CSprite *inimigo, int id); //passa sprite do inimigo + seu ID para poder eliminá-lo
 		
     private:
@@ -85,10 +89,13 @@ class PlayFisicaState : public CGameState
 			CTilesMap *mapFundo;
 			CTilesMap *mapColisao;
 			CSprite *spriteMario;
-			CSprite *spriteCobra;
-			CSprite *spriteInimigos;
+			CSprite *spriteKoopaTroopa;
+			CSprite *spriteGoomba;
 			CSprite *insereQuestionBlocks;
 			CSprite *insereItem;
+			
+			//USADO PARA CARREGAR AS CAIXAS DE FÍSICA DOS PERSONAGENS E DOS ITENS
+			CSprite *auxiliar;
 
       Uint8* keystate; // state of all keys (1 means key is pressed)
 
@@ -100,10 +107,16 @@ class PlayFisicaState : public CGameState
 			CPhysics* Fisica;
 			b2Body* fisicaMario;
 			b2Body* fisicaPiso;
-			b2Body* fisicaCobra;
+			b2Body* fisicaMushroom;
+			b2Body* fisicaGoomba;
+			b2Body* fisicaKoopaTroopa;
+
+			vector<b2Body *> vectorFisicaMushroom;
+			vector<b2Body *> vectorFisicaGoombas;
+			
 		
 			enum {
-				MARIO_ID, COBRA_ID, OBSTACULO1, BOLA, 
+				MARIO_ID, KOOPATROOPA_ID, BOLA, MUSHROOM_ID 
 			};
 
 			//enum para verificar qual ação o Mario está fazendo
@@ -127,8 +140,8 @@ class PlayFisicaState : public CGameState
 			//Vetor de Question Blocks
 			vector<CSprite *> QuestionBlocks;
 			
-			vector<CSprite *> VetInimigos;
-			bool VetInimigosMortos[5]; //aqui guarda os inimigos que morreram. Quando estiver removendo do VetInimigos podemos tirar isto.
+			vector<CSprite *> VetGoomba;
+			bool VetGoombaMortos[5]; //aqui guarda os inimigos que morreram. Quando estiver removendo do VetGoomba podemos tirar isto.
 
 			//Vetor de itens
 			vector<CSprite *> Itens;
