@@ -75,7 +75,7 @@ class PlayFisicaState : public CGameState
 			void CarregaQuestionBlocks(string path, float positionX, float positionY);
 			void CarregaGoomba(string path, float positionX, float positionY);
 			void CarregaKoopaTroopas(string path, float positionX, float positionY);
-			void CarregaItens(string path, float positionX, float positionY);
+			void CarregaMushroons(string path, float positionX, float positionY);
 			void InicializaFisicaMushroons();
 			void InicializaFisicaGoombas();
 			void InicializaFisicaKoopaTroopa();
@@ -83,6 +83,7 @@ class PlayFisicaState : public CGameState
 			void VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador);
 			void VerificaColisao(CSprite *inimigo, int id); //passa sprite do inimigo + seu ID para poder eliminá-lo
 			void MoveGoombas();
+			void MoveMushroom();
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -146,11 +147,18 @@ class PlayFisicaState : public CGameState
 			vector<CSprite *> VetGoomba;
 			bool VetGoombaMortos[5]; //aqui guarda os inimigos que morreram. Quando estiver removendo do VetGoomba podemos tirar isto.
 
-			//Vetor de itens
-			vector<CSprite *> Itens;
+			//Vetor de Mushroons
+			vector<CSprite *> Mushroons;
 
-			//variável usada para ver se o Mario está colidingo com o mapa de tiles
-			bool estaColidindo;
+			//variável usada para impedir que seja carregado mais de um Mushroom no mesmo local
+			bool carregouMushroom1;
+			bool carregouMushroom2;
+			bool carregouMushroom3;
+
+			//variável usada para impedir que aconteça um crash na memória ao definir o PontoFinalGoombas no update
+			//para um mushroom que foi removido do vetor
+			bool impedeCrashMoveMushroom;
+
 
 			bool noChao;
 
@@ -166,6 +174,15 @@ class PlayFisicaState : public CGameState
 			//variáveis que controlam os movimentos dos inimigos
 			b2Vec2 DirecaoGoombas;
 			b2Vec2 PontoFinalGoombas;
+
+			//variáveis que controlam os movimentos dos mushroons
+			b2Vec2 DirecaoMushroons;
+			b2Vec2 PontoFinalMushroons;
+
+			//variavel para começar a mover o mushroom só depois que zerar
+			int tempoParaMover;
+
+
 			
 			b2RevoluteJoint* joint; 
 
