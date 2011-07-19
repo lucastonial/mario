@@ -82,6 +82,7 @@ class PlayFisicaState : public CGameState
 			void EstadosMario();
 			void VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador);
 			void VerificaColisao(CSprite *inimigo, int id); //passa sprite do inimigo + seu ID para poder eliminá-lo
+			void MoveGoombas();
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -113,10 +114,12 @@ class PlayFisicaState : public CGameState
 
 			vector<b2Body *> vectorFisicaMushroom;
 			vector<b2Body *> vectorFisicaGoombas;
+			vector<CSprite *>::iterator itGoomba;
+
 			
 		
 			enum {
-				MARIO_ID, KOOPATROOPA_ID, BOLA, MUSHROOM_ID 
+				MARIO_ID, KOOPATROOPA_ID, GOOMBA_ID , MUSHROOM_ID 
 			};
 
 			//enum para verificar qual ação o Mario está fazendo
@@ -149,6 +152,8 @@ class PlayFisicaState : public CGameState
 			//variável usada para ver se o Mario está colidingo com o mapa de tiles
 			bool estaColidindo;
 
+			bool noChao;
+
 			//variável para controlar a colisão entre Sprites
 			bool colisao;
 
@@ -157,6 +162,10 @@ class PlayFisicaState : public CGameState
 		
 			b2Vec2 Direcao;
 			b2Vec2 PontoFinal;
+
+			//variáveis que controlam os movimentos dos inimigos
+			b2Vec2 DirecaoGoombas;
+			b2Vec2 PontoFinalGoombas;
 			
 			b2RevoluteJoint* joint; 
 
