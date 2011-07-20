@@ -205,9 +205,6 @@ void PlayFisicaState::InicializaFisicaMushroons()
 	
 }
 
-
-
-
 void PlayFisicaState::InicializaFisicaGoombas()
 {
 
@@ -251,34 +248,27 @@ void PlayFisicaState::InicializaFisicaKoopaTroopa()
 }
 
 //verifica colisao do mario
-void PlayFisicaState::VerificaColisao(CSprite *inimigo, int id){
-	if(!VetGoombaMortos[id]){ //aqui testa se o inimigo que está sendo testado não esta morto (quando remover do vetor de inimigos podemos tirar isso, por enquanto está ai pra testes)
-		//colisao lado
-		if(inimigo->getX()<(spriteMario->getX()+20) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+10)){
-			if(inimigo->getY()<(spriteMario->getY()+20) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
-				cout << "****LADO****" << endl;
-				VarTipoColisao = LADO;
-			}else
-				VarTipoColisao = NADA; //se nao for Lado seta para Nada para permitir que teste se esta em cima, pois se não fizer isso ele sempre vai entrar no teste de cima
-		}
-			
-		if(VarTipoColisao != LADO){ // se não colidiu de lado permitimos o teste para colisao de cima, ai não tem perigo de morrer e depois matar
-			//colisao cima
-			//REFAZER ESSA CONDIÇÃO DE COLISÃO
-			if(inimigo->getX()<(spriteMario->getX()+10) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
-				if((inimigo->getY())<(spriteMario->getY()+40) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
-					cout << "****CIMA****" << endl;
-					//layers->remove(inimigo);
-					VetGoombaMortos[id] = true; //quando o inimigo morre é adicionado no vetor de inimigos mortos
-					VarTipoColisao = CIMA;
-					colisao = true;
-
-
-				}
+void PlayFisicaState::VerificaColisao(CSprite *inimigo){
+	//colisao lado
+	if(inimigo->getX()<(spriteMario->getX()+25) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+10)){
+		if(inimigo->getY()<(spriteMario->getY()+20) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
+			cout << "****LADO****" << endl;
+			VarTipoColisao = LADO;
+		}else
+			VarTipoColisao = NADA; //se nao for Lado seta para Nada para permitir que teste se esta em cima, pois se não fizer isso ele sempre vai entrar no teste de cima
+	}
+		
+	if(VarTipoColisao != LADO){ // se não colidiu de lado permitimos o teste para colisao de cima, ai não tem perigo de morrer e depois matar
+		//colisao cima
+		//REFAZER ESSA CONDIÇÃO DE COLISÃO
+		if(inimigo->getX()<(spriteMario->getX()+15) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
+			if((inimigo->getY())<(spriteMario->getY()+45) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
+				cout << "****CIMA****" << endl;
+				VarTipoColisao = CIMA;
+				colisao = true;
 			}
 		}
-	}	
-	
+	}
 }
 
 void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador){	
@@ -555,9 +545,6 @@ void PlayFisicaState::init() {
 	tempoEsperaPulo = 0; ////inicia com 0 para entrar no if do pulo
 	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
 	
-	for(int nCount = 0; nCount < (int)VetGoomba.size(); nCount++){
-			VetGoombaMortos[nCount] = false;
-	}
 	
 }
 
@@ -825,7 +812,7 @@ void PlayFisicaState::update(CGame* game) {
 		for(int nCount = 0; nCount < VetGoomba.size();)
 		{
 	
-			VerificaColisao(VetGoomba[nCount], nCount);
+			VerificaColisao(VetGoomba[nCount]);
 			if (colisao == true && VarTipoColisao == CIMA)
 			{
 
@@ -837,7 +824,7 @@ void PlayFisicaState::update(CGame* game) {
 			}
 			else
 			{
-				VerificaColisao(VetGoomba[nCount], nCount);
+				VerificaColisao(VetGoomba[nCount]);
 
 				VetGoomba[nCount]->update(game->getUpdateInterval()); 
 				VetGoomba[nCount]->setFrameRange(0,1);

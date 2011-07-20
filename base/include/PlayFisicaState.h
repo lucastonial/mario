@@ -81,7 +81,7 @@ class PlayFisicaState : public CGameState
 			void InicializaFisicaKoopaTroopa();
 			void EstadosMario();
 			void VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador);
-			void VerificaColisao(CSprite *inimigo, int id); //passa sprite do inimigo + seu ID para poder eliminá-lo
+			void VerificaColisao(CSprite *inimigo); //passa sprite do inimigo + seu ID para poder eliminá-lo
 			void MoveGoombas();
 			void MoveMushroom();
 		
@@ -145,7 +145,6 @@ class PlayFisicaState : public CGameState
 			vector<CSprite *> QuestionBlocks;
 			
 			vector<CSprite *> VetGoomba;
-			bool VetGoombaMortos[5]; //aqui guarda os inimigos que morreram. Quando estiver removendo do VetGoomba podemos tirar isto.
 
 			//Vetor de Mushroons
 			vector<CSprite *> Mushroons;
