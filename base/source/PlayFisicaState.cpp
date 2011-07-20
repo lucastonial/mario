@@ -82,16 +82,16 @@ void PlayFisicaState::CarregaTiles() {
 }
 
 void PlayFisicaState::CarregaSprites() {
-	string nomeArq = BASE_DIR + "data/img/Mario.png";
+	string nomeArq = BASE_DIR + "data/img/SpritesMario.png";
 	spriteMario = new CSprite();
-	spriteMario->loadSprite(nomeArq.c_str(), 18, 32, 0, 0, 0, 0, 3, 1, 3);
-	spriteMario->setScale(1);
+	spriteMario->loadSprite(nomeArq.c_str(), 18, 31, 0, 0, 0, 0, 4, 4, 13);
+	spriteMario->setScale(1.0);
 	spriteMario->setFrameRange(0,0);
 
 	spriteMario->setPosition(200,400);
 
 	spriteMario->setAnimRate(4); // taxa de animação em frames por segundo(troca dos frames dele)
-	spriteMario->setScale(1.0);
+
 	
 	
 	//Chama o método para carregar os Question Blocks - Ordem de aparecimento pelo X (coluna)
@@ -176,7 +176,7 @@ void PlayFisicaState::CarregaMushroons(string path, float positionX, float posit
 		insereItem->setScale(1);
 		insereItem->setPosition(positionX, positionY);
 
-		insereItem->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
+		insereItem->setAnimRate(5); // taxa de animação em frames por segundo(troca dos frames dele)
 		Mushroons.push_back(insereItem);
 
 
@@ -193,13 +193,14 @@ void PlayFisicaState::InicializaFisicaMushroons()
 		auxiliar = Mushroons[nCount];
 		fisicaMushroom = Fisica->newBoxImage(MUSHROOM_ID,    //int id,
 			auxiliar,                // CImage* sprite,
-			1,                // float density,
+			0.0,                // float density,
 			0.3,            // float friction,
 			0.3,            // float restitution
 			1.0,			 // float linearDamping
 			1.0,			 // float angularDamping
 			false);        // bool staticObj=false
 		vectorFisicaMushroom.push_back(fisicaMushroom);	
+		
 	}
 #endif
 	
@@ -215,7 +216,7 @@ void PlayFisicaState::InicializaFisicaGoombas()
 		auxiliar = VetGoomba[nCount];
 		fisicaGoomba = Fisica->newBoxImage(GOOMBA_ID,    //int id,
 			auxiliar,                // CImage* sprite,
-			1,                // float density,
+			0.0,                // float density,
 			0.2,            // float friction,
 			0.2,            // float restitution
 			1.5,			 // float linearDamping
@@ -236,7 +237,7 @@ void PlayFisicaState::InicializaFisicaKoopaTroopa()
 		auxiliar = spriteKoopaTroopa;
 		fisicaKoopaTroopa = Fisica->newBoxImage(KOOPATROOPA_ID,    //int id,
 			auxiliar,                // CImage* sprite,
-			1,                // float density,
+			0.0,                // float density,
 			0.3,            // float friction,
 			0.2,            // float restitution
 			0.5,			 // float linearDamping
@@ -278,7 +279,7 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 			cout << "****BAIXO****" << endl;
 			
 			layers->remove(questionBlock);
-			QuestionBlocks.erase(QuestionBlocks.begin()+identificador);
+			//QuestionBlocks.erase(QuestionBlocks.begin()+identificador);
 			VarTipoColisao = BAIXO;
 			cout << identificador << endl;
 
@@ -288,6 +289,7 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 				carregouMushroom1 = true;
 				impedeCrashMoveMushroom = true;
 				tempoParaMover = 30;
+				podeCriarFisicaMushroom = true;
 
 			}
 			else if(identificador == 4 && !carregouMushroom2) {//Se colide com o questionblock[4] carrega esse cogumelo
@@ -295,12 +297,14 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 				carregouMushroom2 = true;
 				impedeCrashMoveMushroom = true;
 				tempoParaMover = 30;
+				podeCriarFisicaMushroom = true;
 			}
 			else if (identificador == 8 && !carregouMushroom3) {//Se colide com o questionblock[8] carrega esse cogumelo
 				CarregaMushroons("data/img/Mushroom.png", 4224, 320); //Coluna 132, Linha 6
 				carregouMushroom3 = true;
 				impedeCrashMoveMushroom = true;
 				tempoParaMover = 30;
+				podeCriarFisicaMushroom = true;
 			}
 
 			//ADICIONA OS SPRITES DOS MUSHROONS NAS CAMADAS
@@ -308,10 +312,6 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 			{
 				layers->add(Mushroons[nCount],1);
 			}
-
-			//CHAMA A FUNÇÃO PARA CRIAR AS CAIXAS DE FÍSICA
-			InicializaFisicaMushroons();
-
 
 		}
 	}
@@ -365,13 +365,13 @@ void PlayFisicaState::MoveMushroom()
 		if (tileMax != 192) {
 
 			cout << "O NUMERO DO TILE EH: " << tileMax << endl;
-			DirecaoMushroons = b2Vec2(-12,0);
+			DirecaoMushroons = b2Vec2(-1.3,0);
 
 		}	
 
 		if (tileMin != 192){
 
-			DirecaoMushroons = b2Vec2(12,0);
+			DirecaoMushroons = b2Vec2(1.3,0);
 
 		}
 
@@ -397,13 +397,13 @@ void PlayFisicaState::MoveGoombas()
 		if (tileMax != 192) {
 
 			cout << "O NUMERO DO TILE EH: " << tileMax << endl;
-			DirecaoGoombas = b2Vec2(-15,0);
+			DirecaoGoombas = b2Vec2(-1.4,0);
 
 		}	
 
 		if (tileMin != 192){
 
-			DirecaoGoombas = b2Vec2(15,0);
+			DirecaoGoombas = b2Vec2(1.4,0);
 
 		}
 
@@ -486,7 +486,6 @@ void PlayFisicaState::InitFisica() {
 
 	CriaMapDeColisao();
 	
-
 	b2RevoluteJointDef jointDef;
 	jointDef.Initialize(fisicaMario,fisicaGoomba, fisicaMario->GetWorldCenter());
 
@@ -535,17 +534,19 @@ void PlayFisicaState::init() {
 
     impedeCrashMoveMushroom = false;
 
+	podeCriarFisicaMushroom = false;
+
 
 	//inicializa o vetor de direção dos goombas
-	DirecaoGoombas = b2Vec2(15,0);
+	DirecaoGoombas = b2Vec2(1.4,0);
 
 	//inicializa o vetor de direção dos mushroons
-	DirecaoMushroons = b2Vec2(12,0);
+	DirecaoMushroons = b2Vec2(1.3,0);
 
 	tempoEsperaPulo = 0; ////inicia com 0 para entrar no if do pulo
 	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
 	
-	
+	AcaoMario = PARADO;
 }
 
 void PlayFisicaState::cleanup() {
@@ -575,8 +576,24 @@ void PlayFisicaState::handleEvents(CGame* game) {
 		VerificaColisaoQuestionBlocks(QuestionBlocks[nCount], nCount);		
 	}
 
+	if(VarEstadosMario == INICIAL)
+		spriteMario->setScale(1);
 
-	spriteMario->setFrameRange(0,0);
+	if (AcaoMario != PULANDO){
+		switch(VarEstadosMario)
+		{
+		case INICIAL:
+			spriteMario->setFrameRange(0,0);
+			break;
+
+		case COGUMELO:
+			spriteMario->setFrameRange(5,5);
+			break;
+		case FLOR:
+			spriteMario->setFrameRange(9,9);
+		}
+	}
+
 	
 	while (SDL_PollEvent(&event)) {
 
@@ -604,6 +621,20 @@ void PlayFisicaState::handleEvents(CGame* game) {
 
 						
 				AcaoMario = PULANDO;
+
+				if(VarEstadosMario == INICIAL)
+				{
+					spriteMario->setFrameRange(3,3);
+
+				}
+				else if(VarEstadosMario == COGUMELO)
+				{
+					spriteMario->setFrameRange(8,8);
+				}
+				else if (VarEstadosMario == FLOR)
+				{
+					spriteMario->setFrameRange(12,12);
+				}
 
 				b2Vec2 impulso;
 				b2Vec2 pos;
@@ -655,6 +686,23 @@ void PlayFisicaState::handleEvents(CGame* game) {
 	}
 	
 	if (keystate[SDLK_SPACE]==1) {
+	
+		AcaoMario = PULANDO;
+
+		if(VarEstadosMario == INICIAL)
+		{
+			spriteMario->setFrameRange(3,3);
+
+		}
+		else if(VarEstadosMario == COGUMELO)
+		{
+			spriteMario->setFrameRange(8,8);
+		}
+		else if (VarEstadosMario == FLOR)
+		{
+			spriteMario->setFrameRange(12,12);
+		}
+
 	//	AcaoMario = PULANDO;
 
 	//	b2Vec2 impulso;
@@ -676,32 +724,91 @@ void PlayFisicaState::handleEvents(CGame* game) {
 
 
 	if(keystate[SDLK_RIGHT]==1) {
+		
+		PontoFinal = fisicaMario->GetWorldCenter();
+		Direcao = b2Vec2(55,0);	
+		
+		fisicaMario->ApplyLinearImpulse(Direcao, PontoFinal);
+		
+		spriteMario->setMirror(false);
+		
+		if(AcaoMario == PULANDO){
+			if(VarEstadosMario == INICIAL)
+			{
+				spriteMario->setFrameRange(3,3);
 
-		if(AcaoMario != PULANDO)
-		{	
-			fisicaMario->ApplyLinearImpulse(Direcao, PontoFinal);
+			}
+			else if(VarEstadosMario == COGUMELO)
+			{
+				spriteMario->setFrameRange(8,8);
+			}
+			else if (VarEstadosMario == FLOR)
+			{
+				spriteMario->setFrameRange(12,12);
+			}
 		}
 
-		spriteMario->setMirror(false);
-		cout << "aplicando impulso DIR...."<< endl ;
-		spriteMario->setFrameRange(0,1);
-		//game->setXpan(game->getXpan()+1.5);
-		//game->updateCamera();
 		AcaoMario = CAMINHANDO;
+		if(VarEstadosMario == INICIAL)
+		{
+			spriteMario->setFrameRange(0,2);
+		}
+		else if(VarEstadosMario == COGUMELO)
+		{
+			spriteMario->setFrameRange(5,7);
+		}
+		else if (VarEstadosMario == FLOR)
+		{
+			spriteMario->setFrameRange(9,11);
+		}
+
+
 
 	}
 	
-
-
-
 	if(keystate[SDLK_LEFT]==1) {
 
-//		AcaoMario = CAMINHANDO;
+		PontoFinal = fisicaMario->GetWorldCenter();
+		Direcao = b2Vec2(55,0);
 
 		fisicaMario->ApplyLinearImpulse(-Direcao, PontoFinal);
 		spriteMario->setMirror(true);
-		spriteMario->setFrameRange(0,1);
-		cout << "aplicando impulso ESQ...."<< endl ;
+		
+		if(AcaoMario == PULANDO){
+			if(VarEstadosMario == INICIAL)
+			{
+				spriteMario->setFrameRange(3,3);
+				spriteMario->setScale(1);
+
+			}
+			else if(VarEstadosMario == COGUMELO)
+			{
+				spriteMario->setFrameRange(8,8);
+			}
+			else if (VarEstadosMario == FLOR)
+			{
+				spriteMario->setFrameRange(12,12);
+				spriteMario->setScale(2);
+			}
+		}
+
+		if(VarEstadosMario == INICIAL)
+		{
+			spriteMario->setFrameRange(0,2);
+			spriteMario->setScale(1);
+		}
+		else if(VarEstadosMario == COGUMELO)
+		{
+			spriteMario->setFrameRange(5,7);
+		}
+		else if (VarEstadosMario == FLOR)
+		{
+			spriteMario->setFrameRange(9,11);
+		}
+
+		AcaoMario = CAMINHANDO;
+
+
 		
 
 	}
@@ -740,13 +847,16 @@ void PlayFisicaState::update(CGame* game) {
 	pos = fisicaMario->GetPosition();
 	//cout << "X = "<< pos.x << " Y = " << pos.y << endl;
 
-	PontoFinal = fisicaMario->GetWorldCenter();
-	Direcao = b2Vec2(55,0);
-
 	PontoFinalGoombas = fisicaGoomba->GetWorldCenter();
-	
-
 	MoveGoombas();
+
+	if (podeCriarFisicaMushroom)
+	{
+		//CHAMA A FUNÇÃO PARA CRIAR AS CAIXAS DE FÍSICA
+		InicializaFisicaMushroons();
+		podeCriarFisicaMushroom = false;
+	}
+
 	if (impedeCrashMoveMushroom) 
 	{
 		PontoFinalMushroons = fisicaMushroom->GetWorldCenter();
@@ -758,26 +868,12 @@ void PlayFisicaState::update(CGame* game) {
 			MoveMushroom();
 		}
 	}
-
+    
 	
 
- //   // Controle do pulo do Mario		
-	//if (tempoEsperaPulo > 0)
-	//{
-	//	//cout << "pulando..." << endl;
-	//	estaColidindo = false;
-	//	tempoEsperaPulo--;
+	// Controle do pulo do Mario	
+	int y = (spriteMario->getY()+spriteMario->getHeight()*2)/32;
 
-	//	if (tempoEsperaPulo == 0)
-	//	{
-	//		estaColidindo = TemColisaoSpriteTile(spriteMario, mapColisao); //Se o tempo for 0 ele já via estar colidindo com alguma coisa do mapa de colisão, logo é possível atriibuir a função TemColisaoSpriteTile que vai retornar "true"
-	//	}
-	//}
-    int y = (spriteMario->getY()+spriteMario->getHeight()*2)/32;
-	cout << "O VALOR DE Y EH IGUAL A " << y << endl;
-	//cout << "O NUMERO DO TILE EH: " << mapColisao->getTileNumber(spriteMario->getX()/32, y) << endl;
-
-	// Controle do pulo do Mario		
 	if (mapColisao->getTileNumber(spriteMario->getX()/32, y) != 192){
 
 		if(mapColisao->getTileNumber(spriteMario->getX()/32, y) == 192)
@@ -795,11 +891,14 @@ void PlayFisicaState::update(CGame* game) {
 			colisao = spriteMario->bboxCollision(Mushroons[nCount]);
 			if(colisao){
 				//remove o item do vetor e da camada
-				vectorFisicaMushroom[nCount]->SetActive(false);
 				layers->remove(Mushroons[nCount]);
 				Mushroons.erase(Mushroons.begin()+ nCount);
+				vectorFisicaMushroom[nCount]->SetActive(false);
 				vectorFisicaMushroom.erase(vectorFisicaMushroom.begin()+nCount);
 				impedeCrashMoveMushroom = false;
+				VarEstadosMario = COGUMELO;
+				spriteMario->setCurrentFrame(5);
+
 
 			}
 			else
@@ -832,19 +931,6 @@ void PlayFisicaState::update(CGame* game) {
 			}
 			
 		}
-		//for(int nCount = 0; nCount < VetGoomba.size();){
-		//	colisao = spriteMario->bboxCollision(VetGoomba[nCount]);
-		//	if(colisao){
-		//		vectorFisicaGoombas[nCount]->SetActive(false);
-		//		layers->remove(VetGoomba[nCount]);
-		//		VetGoomba.erase(VetGoomba.begin()+nCount);
-		//		vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
-		//	}
-		//	else{
-		//		nCount++;
-		//	}
-
-		//}
 		
 }
 

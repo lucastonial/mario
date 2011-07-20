@@ -125,7 +125,7 @@ class PlayFisicaState : public CGameState
 
 			//enum para verificar qual ação o Mario está fazendo
 			enum ACOES_MARIO {
-					PULANDO, CAMINHANDO, CORRENDO
+				PARADO, PULANDO, CAMINHANDO, CORRENDO
 			}; ACOES_MARIO AcaoMario;
 			
 			//enum que seta o tipo de colisao
@@ -181,6 +181,7 @@ class PlayFisicaState : public CGameState
 			//variavel para começar a mover o mushroom só depois que zerar
 			int tempoParaMover;
 
+			bool podeCriarFisicaMushroom;
 
 			
 			b2RevoluteJoint* joint; 
