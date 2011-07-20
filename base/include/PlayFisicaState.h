@@ -76,6 +76,7 @@ class PlayFisicaState : public CGameState
 			void CarregaGoomba(string path, float positionX, float positionY);
 			void CarregaKoopaTroopas(string path, float positionX, float positionY);
 			void CarregaMushroons(string path, float positionX, float positionY);
+		    void CarregaFireFlower(string path, float positionX, float positionY);
 			void InicializaFisicaMushroons();
 			void InicializaFisicaGoombas();
 			void InicializaFisicaKoopaTroopa();
@@ -94,7 +95,8 @@ class PlayFisicaState : public CGameState
 			CSprite *spriteKoopaTroopa;
 			CSprite *spriteGoomba;
 			CSprite *insereQuestionBlocks;
-			CSprite *insereItem;
+			CSprite *insereMushroom;
+			CSprite *insereFireFlower;
 			
 			//USADO PARA CARREGAR AS CAIXAS DE FÍSICA DOS PERSONAGENS E DOS ITENS
 			CSprite *auxiliar;
@@ -115,7 +117,6 @@ class PlayFisicaState : public CGameState
 
 			vector<b2Body *> vectorFisicaMushroom;
 			vector<b2Body *> vectorFisicaGoombas;
-			vector<CSprite *>::iterator itGoomba;
 
 			
 		
@@ -149,10 +150,13 @@ class PlayFisicaState : public CGameState
 			//Vetor de Mushroons
 			vector<CSprite *> Mushroons;
 
-			//variável usada para impedir que seja carregado mais de um Mushroom no mesmo local
-			bool carregouMushroom1;
-			bool carregouMushroom2;
-			bool carregouMushroom3;
+			//Vetor de Fire Flower
+			vector<CSprite *> FireFlower;
+
+			//variável usada para impedir que seja carregado mais de um Item no mesmo local
+			bool carregoubloco1;
+			bool carregoubloco2;
+			bool carregoubloco3;
 
 			//variável usada para impedir que aconteça um crash na memória ao definir o PontoFinalGoombas no update
 			//para um mushroom que foi removido do vetor

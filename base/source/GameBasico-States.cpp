@@ -28,13 +28,16 @@ using namespace std;
 #include "CGame.h"
 #include "PlayState.h"
 #include "MenuState.h"
+#include "TelaInicialState.h"
 
 int main( int argc, char* args[] ) {
     CGame game(5,30);
 
-	game.init("Jogo Basico com Interface",800,515,0,false);
+	game.init("Super Mario Bros - Trabalho de Prog2D",800,515,0,false);
 
-    game.changeState(MenuState::instance());
+    //game.changeState(MenuState::instance());
+	game.changeState(TelaInicialState::instance());
+
 
 	while(game.isRunning())
 	{

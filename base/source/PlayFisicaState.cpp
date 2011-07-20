@@ -108,17 +108,30 @@ void PlayFisicaState::CarregaSprites() {
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4960, 224); //Coluna 155, Linha 7
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 224); //Coluna 156, Linha 7
 	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 352); //Coluna 198, Linha 11
-
+   
+	//SE QUISER FAZER ALGUM TESTE CRIAR OUTRO GOOMBA, POIS JÁ ESTÃO MAPEADOS NA FASE
 	//Chama o método para carregar os Goombas
-	CarregaGoomba("data/img/Goomba.png", 600, 448);
-	CarregaGoomba("data/img/Goomba.png", 1312, 448); //Coluna 41, Linha 14
-	//CarregaGoomba("data/img/Goomba.png", 1500, 450);
-	//CarregaGoomba("data/img/Goomba.png", 2000, 450);
-	//CarregaGoomba("data/img/Goomba.png", 2500, 450);
+	CarregaGoomba("data/img/Goomba.png", 600, 448);	//Coluna 31, Linha 14	
+	CarregaGoomba("data/img/Goomba.png", 1824, 448); //Coluna 57, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 2144, 448); //Coluna 67, Linha 14   
+	CarregaGoomba("data/img/Goomba.png", 2176, 448); //Coluna 68, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 3264, 192); //Coluna 102, Linha 6
+	CarregaGoomba("data/img/Goomba.png", 3136, 320); //Coluna 98, Linha 10
+	CarregaGoomba("data/img/Goomba.png", 3808, 448); //Coluna 119, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 3840, 448); //Coluna 120, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 4800, 448); //Coluna 150, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 4832, 448); //Coluna 151, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 5088, 448); //Coluna 159, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 5120, 448); //Coluna 160, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 6528, 448); //Coluna 204, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 6560, 448); //Coluna 205, Linha 14
+
+
+
 
 
     //Chama o método para carregar o único Koopa Troopa da fase
-	CarregaKoopaTroopas("data/img/KoopaTroopa.png", 400, 450);
+	CarregaKoopaTroopas("data/img/KoopaTroopa.png", 4480, 448); //Coluna 140, Linha 14
 
 
 }
@@ -162,7 +175,7 @@ void PlayFisicaState::CarregaKoopaTroopas(string path, float positionX, float po
 	spriteKoopaTroopa->setScale(1.5);
 	spriteKoopaTroopa->setMirror(false);
 
-	spriteKoopaTroopa->setPosition(300, 250);
+	spriteKoopaTroopa->setPosition(positionX, positionY);
 	spriteKoopaTroopa->setAnimRate(2); // taxa de animação em frames por segundo(troca dos frames dele)
 
 }
@@ -171,15 +184,26 @@ void PlayFisicaState::CarregaMushroons(string path, float positionX, float posit
 {
 		string nomeArq = BASE_DIR + path;
 
-		insereItem = new CSprite();
-		insereItem->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 7, 1, 7);
-		insereItem->setScale(1);
-		insereItem->setPosition(positionX, positionY);
+		insereMushroom = new CSprite();
+		insereMushroom->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 7, 1, 7);
+		insereMushroom->setScale(1);
+		insereMushroom->setPosition(positionX, positionY);
 
-		insereItem->setAnimRate(5); // taxa de animação em frames por segundo(troca dos frames dele)
-		Mushroons.push_back(insereItem);
+		insereMushroom->setAnimRate(5); // taxa de animação em frames por segundo(troca dos frames dele)
+		Mushroons.push_back(insereMushroom);
+}
 
+void PlayFisicaState::CarregaFireFlower(string path, float positionX, float positionY)
+{
+		string nomeArq = BASE_DIR + path;
 
+		insereFireFlower = new CSprite();
+		insereFireFlower->loadSprite(nomeArq.c_str(), 32, 31, 0, 0, 0, 0, 12, 1, 12);
+		insereFireFlower->setScale(1);
+		insereFireFlower->setPosition(positionX, positionY);
+
+		insereFireFlower->setAnimRate(5); // taxa de animação em frames por segundo(troca dos frames dele)
+		FireFlower.push_back(insereFireFlower);
 }
 
 void PlayFisicaState::InicializaFisicaMushroons()
@@ -284,33 +308,57 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 			cout << identificador << endl;
 
 			//Se colide com o questionblock[1] carrega esse cogumelo
-			if (identificador == 1 && !carregouMushroom1) {
+			if (identificador == 1 && !carregoubloco1) {
 			    CarregaMushroons("data/img/Mushroom.png", 928, 320); //Coluna 29, Linha 10
-				carregouMushroom1 = true;
+				carregoubloco1 = true;
 				impedeCrashMoveMushroom = true;
 				tempoParaMover = 30;
 				podeCriarFisicaMushroom = true;
 
 			}
-			else if(identificador == 4 && !carregouMushroom2) {//Se colide com o questionblock[4] carrega esse cogumelo
-				CarregaMushroons("data/img/Mushroom.png", 3104, 320); //Coluna 97, Linha 10
-				carregouMushroom2 = true;
-				impedeCrashMoveMushroom = true;
-				tempoParaMover = 30;
-				podeCriarFisicaMushroom = true;
+			else if(identificador == 4 && !carregoubloco2) {//Se colide com o questionblock[4] carrega esse cogumelo
+				if(VarEstadosMario == COGUMELO)
+				{
+					CarregaFireFlower("data/img/FireFlower.png", 3104, 320); //Coluna 97, Linha 10
+
+				}
+				else
+				{
+					CarregaMushroons("data/img/Mushroom.png", 3104, 320); //Coluna 97, Linha 10
+					impedeCrashMoveMushroom = true;
+					tempoParaMover = 30;
+					podeCriarFisicaMushroom = true;
+				}
+				carregoubloco2 = true;
+
 			}
-			else if (identificador == 8 && !carregouMushroom3) {//Se colide com o questionblock[8] carrega esse cogumelo
-				CarregaMushroons("data/img/Mushroom.png", 4224, 320); //Coluna 132, Linha 6
-				carregouMushroom3 = true;
-				impedeCrashMoveMushroom = true;
-				tempoParaMover = 30;
-				podeCriarFisicaMushroom = true;
+			else if (identificador == 8 && !carregoubloco3) {//Se colide com o questionblock[8] carrega esse cogumelo
+				if(VarEstadosMario == COGUMELO || VarEstadosMario == FLOR)
+				{
+					CarregaFireFlower("data/img/FireFlower.png", 4224, 320); //Coluna 97, Linha 10
+
+				}
+				else
+				{
+
+					CarregaMushroons("data/img/Mushroom.png", 4224, 320); //Coluna 132, Linha 6
+					impedeCrashMoveMushroom = true;
+					tempoParaMover = 30;
+					podeCriarFisicaMushroom = true;
+				}
+				carregoubloco3 = true;
+
 			}
 
 			//ADICIONA OS SPRITES DOS MUSHROONS NAS CAMADAS
 			for(int nCount = 0; nCount < (int)Mushroons.size(); nCount++)
 			{
 				layers->add(Mushroons[nCount],1);
+			}
+
+			for(int nCount = 0; nCount < (int)FireFlower.size(); nCount++)
+			{
+				layers->add(FireFlower[nCount],1);
 			}
 
 		}
@@ -528,9 +576,9 @@ void PlayFisicaState::init() {
 	tipoItem = 1;
 
 	//inicializa variáveis para controlar se os mushroons estão carregados
-	carregouMushroom1 = false;
-	carregouMushroom2 = false;
-	carregouMushroom3 = false;
+	carregoubloco1 = false;
+	carregoubloco2 = false;
+	carregoubloco3 = false;
 
     impedeCrashMoveMushroom = false;
 
@@ -538,7 +586,7 @@ void PlayFisicaState::init() {
 
 
 	//inicializa o vetor de direção dos goombas
-	DirecaoGoombas = b2Vec2(1.4,0);
+	DirecaoGoombas = b2Vec2(-1.4,0);
 
 	//inicializa o vetor de direção dos mushroons
 	DirecaoMushroons = b2Vec2(1.3,0);
@@ -729,7 +777,10 @@ void PlayFisicaState::handleEvents(CGame* game) {
 		Direcao = b2Vec2(55,0);	
 		
 		fisicaMario->ApplyLinearImpulse(Direcao, PontoFinal);
-		
+		if(spriteMario->getX() > 6848)
+			spriteMario->setX(6848);
+
+
 		spriteMario->setMirror(false);
 		
 		if(AcaoMario == PULANDO){
@@ -788,7 +839,6 @@ void PlayFisicaState::handleEvents(CGame* game) {
 			else if (VarEstadosMario == FLOR)
 			{
 				spriteMario->setFrameRange(12,12);
-				spriteMario->setScale(2);
 			}
 		}
 
@@ -830,6 +880,12 @@ void PlayFisicaState::update(CGame* game) {
 		Mushroons[i]->setFrameRange(6,6);
 	}
 
+	for(int i=0; i < (int)FireFlower.size(); i ++){ 
+		//Usado para animar os sprites
+		FireFlower[0]->update(game->getUpdateInterval()); 
+		FireFlower[0]->setFrameRange(9,11);
+	}
+
 
 	spriteKoopaTroopa->update(game->getUpdateInterval());
 	spriteKoopaTroopa->setFrameRange(0,1);
@@ -840,7 +896,14 @@ void PlayFisicaState::update(CGame* game) {
 	if (Fisica->haveContact(KOOPATROOPA_ID+1, MARIO_ID)) {
 		cout << "Contato !!!"<< endl;
 	}
+
 	game->setXpan(spriteMario->getX()-150);
+	if (game->getXpan() > 6848)
+			game->setXpan(6848);
+		
+	if (game->getXpan() < 0)
+			game->setXpan(0);
+	
 	game->updateCamera();
 
 	b2Vec2 pos;
@@ -848,7 +911,7 @@ void PlayFisicaState::update(CGame* game) {
 	//cout << "X = "<< pos.x << " Y = " << pos.y << endl;
 
 	PontoFinalGoombas = fisicaGoomba->GetWorldCenter();
-	MoveGoombas();
+	//MoveGoombas();
 
 	if (podeCriarFisicaMushroom)
 	{
@@ -886,26 +949,48 @@ void PlayFisicaState::update(CGame* game) {
 
 
 
-		//Testa a colisão entre o Mario e o item
-		for(int nCount = 0; nCount < Mushroons.size();){
-			colisao = spriteMario->bboxCollision(Mushroons[nCount]);
-			if(colisao){
-				//remove o item do vetor e da camada
-				layers->remove(Mushroons[nCount]);
-				Mushroons.erase(Mushroons.begin()+ nCount);
-				vectorFisicaMushroom[nCount]->SetActive(false);
-				vectorFisicaMushroom.erase(vectorFisicaMushroom.begin()+nCount);
-				impedeCrashMoveMushroom = false;
-				VarEstadosMario = COGUMELO;
-				spriteMario->setCurrentFrame(5);
+	//Testa a colisão entre o Mario e o Cogumelo
+	for(int nCount = 0; nCount < Mushroons.size();){
+		colisao = spriteMario->bboxCollision(Mushroons[nCount]);
+		if(colisao){
+			//remove o item do vetor e da camada
+			vectorFisicaMushroom[nCount]->SetActive(false);
+			layers->remove(Mushroons[nCount]);
+			Mushroons.erase(Mushroons.begin()+ nCount);
+			vectorFisicaMushroom.erase(vectorFisicaMushroom.begin()+nCount);
+			impedeCrashMoveMushroom = false;
+			VarEstadosMario = COGUMELO;
+			spriteMario->setCurrentFrame(5);
+			spriteMario->setScale(1.35);
 
 
-			}
-			else
-			{
-				nCount ++;
-			} 
 		}
+		else
+		{
+			nCount ++;
+		} 
+	}
+	//Testa a colisão entre o Mario e a flor
+	for(int nCount = 0; nCount < FireFlower.size();){
+		colisao = spriteMario->bboxCollision(FireFlower[nCount]);
+		if(colisao){
+			//remove o item do vetor e da camada
+			layers->remove(FireFlower[nCount]);
+			FireFlower.erase(FireFlower.begin()+ nCount);
+			VarEstadosMario = FLOR;
+			
+			if(VarEstadosMario != FLOR)
+			{
+				spriteMario->setCurrentFrame(9);
+				spriteMario->setScale(1.35);
+			}
+
+		}
+		else
+		{
+			nCount ++;
+		} 
+	}
 		
 
 		for(int nCount = 0; nCount < VetGoomba.size();)

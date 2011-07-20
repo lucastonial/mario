@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\source\TelaInicialState.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\source\TextureManager.cpp"
 				>
 			</File>
@@ -286,6 +290,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\include\PlayFisicaState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\include\TelaInicialState.h"
 				>
 			</File>
 			<File
