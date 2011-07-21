@@ -460,21 +460,46 @@ void PlayFisicaState::MoveGoombas()
 		if (tileMax != 192) {
 
 			cout << "O NUMERO DO TILE EH: " << tileMax << endl;
-			DirecaoGoombas = b2Vec2(-1.4,0);
+			DirecaoGoombas = b2Vec2(-0.4,0);
 
 		}	
 
 		if (tileMin != 192){
 
-			DirecaoGoombas = b2Vec2(1.4,0);
+			DirecaoGoombas = b2Vec2(0.4,0);
 
 		}
-
-
 
 	}
 
 }
+
+void PlayFisicaState::MoveKoopaTroopa()
+{
+	
+		int xMax = (spriteKoopaTroopa->getX()+spriteKoopaTroopa->getWidth()*2)/32;
+		int xMin = (spriteKoopaTroopa->getX()-spriteKoopaTroopa->getWidth())/32;
+		int tileMax = mapColisao->getTileNumber(xMax, spriteKoopaTroopa->getY()/32);
+		int tileMin = mapColisao->getTileNumber(xMin, spriteKoopaTroopa->getY()/32);
+
+		fisicaKoopaTroopa->ApplyLinearImpulse(DirecaoKoopaTroopa,PontoFinalKoopaTroopa);
+	
+		if (tileMax != 192) {
+
+			cout << "O NUMERO DO TILE EH: " << tileMax << endl;
+			DirecaoKoopaTroopa = b2Vec2(-1.0,0);
+
+		}	
+
+		if (tileMin != 192){
+
+			DirecaoKoopaTroopa = b2Vec2(1.0,0);
+
+		}
+
+}
+
+
 /*
 //aqui foi feito teste dos estados do mario no events
 //aqui comeca os testes do estado do mario
@@ -571,6 +596,8 @@ void PlayFisicaState::init() {
 	CarregaSprites();
 	MontaLayer();
 	InitFisica();
+
+	somCarregado = false;
 	
 
 	// SDL_GetTicks() tells how many milliseconds have past since an arbitrary point in the past.
@@ -595,18 +622,22 @@ void PlayFisicaState::init() {
 	carregoubloco2 = false;
 	carregoubloco3 = false;
 
-  impedeCrashMoveMushroom = false;
+    impedeCrashMoveMushroom = false;
 
 	podeCriarFisicaMushroom = false;
 
+	contadorGoombas = 14;
+
 
 	//inicializa o vetor de direção dos goombas
-	DirecaoGoombas = b2Vec2(-1.4,0);
+	DirecaoGoombas = b2Vec2(-0.4,0);
+
+	//inicializa o vetor de direção dos goombas
+	DirecaoKoopaTroopa = b2Vec2(-1.0,0);
 
 	//inicializa o vetor de direção dos mushroons
 	DirecaoMushroons = b2Vec2(1.3,0);
 
-	tempoEsperaPulo = 0; ////inicia com 0 para entrar no if do pulo
 	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
 	
 	AcaoMario = PARADO;
@@ -678,7 +709,9 @@ void PlayFisicaState::handleEvents(CGame* game) {
 			} else if (event.key.keysym.sym == SDLK_p)
 				game->pushState(PauseState::instance());
 			else if (event.key.keysym.sym == SDLK_b){
-				fisicaKoopaTroopa->SetActive(false);
+				//fisicaKoopaTroopa->SetActive(false);
+				
+
 				
 			}
 			
@@ -686,6 +719,9 @@ void PlayFisicaState::handleEvents(CGame* game) {
 
 						
 				AcaoMario = PULANDO;
+				
+				game->getAudioEngine()->play2D(somSalto, false, false, true);
+
 
 				if(VarEstadosMario == INICIAL)
 				{
@@ -719,6 +755,8 @@ void PlayFisicaState::handleEvents(CGame* game) {
 			}
 			
 		  if(event.key.keysym.sym == SDLK_z) {
+				layers->remove(Mushroons[0]);
+
 				if(VarEstadosMario == FLOR){
 					cout << "ESTOU ATIRANDO";
 				}
@@ -881,15 +919,99 @@ void PlayFisicaState::handleEvents(CGame* game) {
 		}
 
 		AcaoMario = CAMINHANDO;
-
-
 		
-
 	}
 	
 }
 
+//REMOVE OS GOOMBAS SE ELES AINDA ESTIVEREM VIVOS CONFORME O MARIO ANDA NO CENARIO 
+void PlayFisicaState::RemoveGoombasPeloAndamentoCenario()
+{
+	if(spriteMario->getX() > 2528){
+		for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+		{
+			if(VetGoomba[nCount]->getX() < 2528){
+				vectorFisicaGoombas[nCount]->SetActive(false);
+				layers->remove(VetGoomba[nCount]);
+				VetGoomba.erase(VetGoomba.begin()+nCount);
+				vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
+				contadorGoombas--;
+			}
+		}
+	}
+
+	if(spriteMario->getX() > 3648){
+		for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+		{
+			if(VetGoomba[nCount]->getX() < 3648){
+				vectorFisicaGoombas[nCount]->SetActive(false);
+				layers->remove(VetGoomba[nCount]);
+				VetGoomba.erase(VetGoomba.begin()+nCount);
+				vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
+				contadorGoombas--;
+			}
+		}
+	}
+
+	if(spriteMario->getX() > 4480){
+		for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+		{
+			if(VetGoomba[nCount]->getX() < 4480){
+				vectorFisicaGoombas[nCount]->SetActive(false);
+				layers->remove(VetGoomba[nCount]);
+				VetGoomba.erase(VetGoomba.begin()+nCount);
+				vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
+				contadorGoombas--;
+			}
+		}
+	}
+
+	if(spriteMario->getX() > 5856){
+		for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+		{
+			if(VetGoomba[nCount]->getX() < 5856){
+				vectorFisicaGoombas[nCount]->SetActive(false);
+				layers->remove(VetGoomba[nCount]);
+				VetGoomba.erase(VetGoomba.begin()+nCount);
+				vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
+				contadorGoombas--;
+			}
+		}
+	}
+
+	if(spriteMario->getX() > 7200){
+		for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+		{
+			if(VetGoomba[nCount]->getX() < 7200){
+				vectorFisicaGoombas[nCount]->SetActive(false);
+				layers->remove(VetGoomba[nCount]);
+				VetGoomba.erase(VetGoomba.begin()+nCount);
+				vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
+				contadorGoombas--;
+			}
+		}
+	}
+}
+
+void PlayFisicaState::CarregaSons(CGame* game){		
+
+	//Nome para os arquivos de som
+
+	string nomeArqSomTema = BASE_DIR + "data/audio/Super-Mario-Bros.mp3";
+	somTema = game->getAudioEngine()->addSoundSourceFromFile(nomeArqSomTema.c_str());
+	game->getAudioEngine()->play2D(somTema,false, false, true);
+
+
+	string nomeArqSomSalto = BASE_DIR + "data/audio/jump.wav";
+	somSalto = game ->getAudioEngine()->addSoundSourceFromFile(nomeArqSomSalto.c_str());
+
+	somCarregado = true;
+
+}
+
+
 void PlayFisicaState::update(CGame* game) {
+
 
 	spriteMario->update(game->getUpdateInterval());
 	//Percorre todo o vetor de blocks para poder animar
@@ -906,8 +1028,8 @@ void PlayFisicaState::update(CGame* game) {
 
 	for(int i=0; i < (int)FireFlower.size(); i ++){ 
 		//Usado para animar os sprites
-		FireFlower[0]->update(game->getUpdateInterval()); 
-		FireFlower[0]->setFrameRange(9,11);
+		FireFlower[i]->update(game->getUpdateInterval()); 
+		FireFlower[i]->setFrameRange(9,11);
 	}
 
 
@@ -935,7 +1057,8 @@ void PlayFisicaState::update(CGame* game) {
 	//cout << "X = "<< pos.x << " Y = " << pos.y << endl;
 
 	PontoFinalGoombas = fisicaGoomba->GetWorldCenter();
-	MoveGoombas();
+	PontoFinalKoopaTroopa = fisicaKoopaTroopa->GetWorldCenter();
+	
 
 	if (podeCriarFisicaMushroom)
 	{
@@ -971,6 +1094,31 @@ void PlayFisicaState::update(CGame* game) {
 
 	EstadosMario(game);	
 
+	RemoveGoombasPeloAndamentoCenario();
+
+	//if(spriteMario->getX() >  250){
+	//	for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+	//	{
+	//		if(VetGoomba[nCount]->getX() > spriteMario->getX())
+	//			MoveGoombas();
+
+	//	}
+	//}
+
+	if(spriteMario->getX() >  3584){
+
+		if(spriteKoopaTroopa->getX() > 3584)
+			MoveKoopaTroopa();
+
+	}
+
+	//if(spriteMario->getX() > 2528){
+	//	for (int nCount = 0; nCount < VetGoomba.size(); nCount ++)
+	//	{
+	//		MoveGoombas();
+
+	//	}
+	//}
 
 
 	//Testa a colisão entre o Mario e o Cogumelo
@@ -978,10 +1126,11 @@ void PlayFisicaState::update(CGame* game) {
 		colisao = spriteMario->bboxCollision(Mushroons[nCount]);
 		if(colisao){
 			//remove o item do vetor e da camada
+			layers->remove(Mushroons[nCount]);
 			vectorFisicaMushroom[nCount]->SetActive(false);
 			layers->remove(Mushroons[nCount]);
-			Mushroons.erase(Mushroons.begin()+ nCount);
 			vectorFisicaMushroom.erase(vectorFisicaMushroom.begin()+nCount);
+			Mushroons.erase(Mushroons.begin()+ nCount);
 			impedeCrashMoveMushroom = false;
 			VarEstadosMario = COGUMELO;
 			spriteMario->setCurrentFrame(5);
@@ -999,6 +1148,7 @@ void PlayFisicaState::update(CGame* game) {
 		colisao = spriteMario->bboxCollision(FireFlower[nCount]);
 		if(colisao){
 			//remove o item do vetor e da camada
+			layers->remove(FireFlower[nCount]);
 			layers->remove(FireFlower[nCount]);
 			FireFlower.erase(FireFlower.begin()+ nCount);
 			VarEstadosMario = FLOR;
@@ -1029,6 +1179,7 @@ void PlayFisicaState::update(CGame* game) {
 				VetGoomba.erase(VetGoomba.begin()+nCount);
 				vectorFisicaGoombas.erase(vectorFisicaGoombas.begin()+nCount);
 				VarTipoColisao = NADA;
+				contadorGoombas--;
 			}
 			else
 			{
@@ -1042,6 +1193,9 @@ void PlayFisicaState::update(CGame* game) {
 		}
 		//seta o tempo atual
 		current_time = SDL_GetTicks();
+
+		if(!somCarregado)
+			CarregaSons(game);
 }
 
 void PlayFisicaState::draw(CGame* game) {

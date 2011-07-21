@@ -34,6 +34,8 @@ void CGame::init(const char* title, int width, int height, int bpp, bool fullscr
     flags = SDL_OPENGL | SDL_RESIZABLE;
     this->bpp = bpp;
 
+	audioEngine = irrklang::createIrrKlangDevice();
+
 	// initialize SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
 
