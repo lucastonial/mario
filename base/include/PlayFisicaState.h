@@ -85,13 +85,10 @@ class PlayFisicaState : public CGameState
 			void VerificaColisao(CSprite *inimigo); //passa sprite do inimigo + seu ID para poder eliminá-lo
 			void MoveGoombas();
 			void MoveMushroom();
-<<<<<<< HEAD
 			void CarregaTiros(); //instancia os tiros
-=======
 			void RemoveGoombasPeloAndamentoCenario();
 			void CarregaSons(CGame* game);
 			void MoveKoopaTroopa();
->>>>>>> GitHubMario/master
 		
     private:
 			static PlayFisicaState m_PlayState;

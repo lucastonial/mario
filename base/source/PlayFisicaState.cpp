@@ -790,18 +790,15 @@ void PlayFisicaState::handleEvents(CGame* game) {
 			}
 			
 		  if(event.key.keysym.sym == SDLK_z) {
-<<<<<<< HEAD
 				//if(VarEstadosMario == FLOR){
-=======
 				layers->remove(Mushroons[0]);
 
-				if(VarEstadosMario == FLOR){
->>>>>>> GitHubMario/master
 					cout << "ESTOU ATIRANDO";
 					CarregaTiros();
 				//}
 				break;
 			}
+			
 			
 			break;
 
