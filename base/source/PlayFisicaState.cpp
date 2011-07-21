@@ -34,7 +34,7 @@ void PlayFisicaState::DesenhaLinha(b2Vec2 pontoInicial, b2Vec2 pontoFinal) {
 
 void PlayFisicaState::CarregaTiles() {
 	bool ret;
-	string nomeArq = BASE_DIR + "data/maps/Mario.txt";
+	string nomeArq = BASE_DIR + "data/maps/CenarioSemColisaoMario.txt";
 
 	mapFundo = new CTilesMap();
 	ret = mapFundo->loadMap(nomeArq.c_str());
@@ -58,7 +58,7 @@ void PlayFisicaState::CarregaTiles() {
 
 	////
 
-	nomeArq = BASE_DIR + "data/maps/CenarioMarioColisao.txt";
+	nomeArq = BASE_DIR + "data/maps/NewCenarioMarioColisao.txt";
 
 	mapColisao = new CTilesMap();
 	ret = mapColisao->loadMap(nomeArq.c_str());
@@ -88,50 +88,51 @@ void PlayFisicaState::CarregaSprites() {
 	spriteMario->setScale(1.0);
 	spriteMario->setFrameRange(0,0);
 
-	spriteMario->setPosition(200,400);
+	spriteMario->setPosition(200,416);
 
 	spriteMario->setAnimRate(4); // taxa de animação em frames por segundo(troca dos frames dele)
 
 	
 	
 	//Chama o método para carregar os Question Blocks - Ordem de aparecimento pelo X (coluna)
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 768, 352); //Coluna 24, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 928, 352); //Coluna 29, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 960, 224); //Coluna 30, Linha 7
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 992, 352); //Coluna 31, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 3104, 352); //Coluna 97, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 3712, 224); //Coluna 116, Linha 7
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4128, 352); //Coluna 129, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4224, 224); //Coluna 132, Linha 7
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4224, 352); //Coluna 132, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4320, 352); //Coluna 135, Linha 11
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4960, 224); //Coluna 155, Linha 7
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 224); //Coluna 156, Linha 7
-	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 352); //Coluna 198, Linha 11
+	//modificado
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 768, 320); //Coluna 24, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 928, 320); //Coluna 29, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 960, 192); //Coluna 30, Linha 6
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 992, 320); //Coluna 31, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 3104, 320); //Coluna 97, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 3712, 192); //Coluna 116, Linha 6
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4128, 320); //Coluna 129, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4224, 192); //Coluna 132, Linha 6
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4224, 320); //Coluna 132, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4320, 320); //Coluna 135, Linha 10
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4960, 192); //Coluna 155, Linha 6
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 4992, 192); //Coluna 156, Linha 6
+	CarregaQuestionBlocks("data/img/QuestionBlocks.png", 6336, 320); //Coluna 198, Linha 10
    
 	//SE QUISER FAZER ALGUM TESTE CRIAR OUTRO GOOMBA, POIS JÁ ESTÃO MAPEADOS NA FASE
 	//Chama o método para carregar os Goombas
-	CarregaGoomba("data/img/Goomba.png", 600, 448);	//Coluna 31, Linha 14	
-	CarregaGoomba("data/img/Goomba.png", 1824, 448); //Coluna 57, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 2144, 448); //Coluna 67, Linha 14   
-	CarregaGoomba("data/img/Goomba.png", 2176, 448); //Coluna 68, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 3264, 192); //Coluna 102, Linha 6
-	CarregaGoomba("data/img/Goomba.png", 3136, 320); //Coluna 98, Linha 10
-	CarregaGoomba("data/img/Goomba.png", 3808, 448); //Coluna 119, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 3840, 448); //Coluna 120, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 4800, 448); //Coluna 150, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 4832, 448); //Coluna 151, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 5088, 448); //Coluna 159, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 5120, 448); //Coluna 160, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 6528, 448); //Coluna 204, Linha 14
-	CarregaGoomba("data/img/Goomba.png", 6560, 448); //Coluna 205, Linha 14
+	CarregaGoomba("data/img/Goomba.png", 600, 416);	//Coluna 31, Linha 13	
+	CarregaGoomba("data/img/Goomba.png", 1824, 416); //Coluna 57, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 2144, 416); //Coluna 67, Linha 13   
+	CarregaGoomba("data/img/Goomba.png", 2176, 416); //Coluna 68, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 3264, 160); //Coluna 102, Linha 5
+	CarregaGoomba("data/img/Goomba.png", 3136, 288); //Coluna 98, Linha 9
+	CarregaGoomba("data/img/Goomba.png", 3808, 416); //Coluna 119, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 3840, 416); //Coluna 120, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 4800, 416); //Coluna 150, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 4832, 416); //Coluna 151, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 5088, 416); //Coluna 159, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 5120, 416); //Coluna 160, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 6528, 416); //Coluna 204, Linha 13
+	CarregaGoomba("data/img/Goomba.png", 6560, 416); //Coluna 205, Linha 13
 
 
 
 
 
     //Chama o método para carregar o único Koopa Troopa da fase
-	CarregaKoopaTroopas("data/img/KoopaTroopa.png", 4480, 448); //Coluna 140, Linha 14
+	CarregaKoopaTroopas("data/img/KoopaTroopa.png", 4480, 416); //Coluna 140, Linha 13
 
 
 }
@@ -309,7 +310,7 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 
 			//Se colide com o questionblock[1] carrega esse cogumelo
 			if (identificador == 1 && !carregoubloco1) {
-			    CarregaMushroons("data/img/Mushroom.png", 928, 320); //Coluna 29, Linha 10
+			    CarregaMushroons("data/img/Mushroom.png", 928, 288); //Coluna 29, Linha 9
 				carregoubloco1 = true;
 				impedeCrashMoveMushroom = true;
 				tempoParaMover = 30;
@@ -319,12 +320,12 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 			else if(identificador == 4 && !carregoubloco2) {//Se colide com o questionblock[4] carrega esse cogumelo
 				if(VarEstadosMario == COGUMELO)
 				{
-					CarregaFireFlower("data/img/FireFlower.png", 3104, 320); //Coluna 97, Linha 10
+					CarregaFireFlower("data/img/FireFlower.png", 3104, 288); //Coluna 97, Linha 9
 
 				}
 				else
 				{
-					CarregaMushroons("data/img/Mushroom.png", 3104, 320); //Coluna 97, Linha 10
+					CarregaMushroons("data/img/Mushroom.png", 3104, 288); //Coluna 97, Linha 9
 					impedeCrashMoveMushroom = true;
 					tempoParaMover = 30;
 					podeCriarFisicaMushroom = true;
@@ -335,13 +336,13 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 			else if (identificador == 8 && !carregoubloco3) {//Se colide com o questionblock[8] carrega esse cogumelo
 				if(VarEstadosMario == COGUMELO || VarEstadosMario == FLOR)
 				{
-					CarregaFireFlower("data/img/FireFlower.png", 4224, 320); //Coluna 97, Linha 10
+					CarregaFireFlower("data/img/FireFlower.png", 4224, 288); //Coluna 97, Linha 9
 
 				}
 				else
 				{
 
-					CarregaMushroons("data/img/Mushroom.png", 4224, 320); //Coluna 132, Linha 6
+					CarregaMushroons("data/img/Mushroom.png", 4224, 288); //Coluna 132, Linha 9
 					impedeCrashMoveMushroom = true;
 					tempoParaMover = 30;
 					podeCriarFisicaMushroom = true;
@@ -924,8 +925,8 @@ void PlayFisicaState::update(CGame* game) {
 	if (game->getXpan() > 6848)
 			game->setXpan(6848);
 		
-	if (game->getXpan() < 0)
-			game->setXpan(0);
+	if (game->getXpan() < 32)
+			game->setXpan(32);
 	
 	game->updateCamera();
 
@@ -934,7 +935,7 @@ void PlayFisicaState::update(CGame* game) {
 	//cout << "X = "<< pos.x << " Y = " << pos.y << endl;
 
 	PontoFinalGoombas = fisicaGoomba->GetWorldCenter();
-	//MoveGoombas();
+	MoveGoombas();
 
 	if (podeCriarFisicaMushroom)
 	{
