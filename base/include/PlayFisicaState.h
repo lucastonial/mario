@@ -85,6 +85,7 @@ class PlayFisicaState : public CGameState
 			void VerificaColisao(CSprite *inimigo); //passa sprite do inimigo + seu ID para poder eliminá-lo
 			void MoveGoombas();
 			void MoveMushroom();
+			void CarregaTiros(); //instancia os tiros
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -97,6 +98,7 @@ class PlayFisicaState : public CGameState
 			CSprite *insereQuestionBlocks;
 			CSprite *insereMushroom;
 			CSprite *insereFireFlower;
+			CSprite *testeTiro;
 			
 			//USADO PARA CARREGAR AS CAIXAS DE FÍSICA DOS PERSONAGENS E DOS ITENS
 			CSprite *auxiliar;
@@ -114,9 +116,11 @@ class PlayFisicaState : public CGameState
 			b2Body* fisicaMushroom;
 			b2Body* fisicaGoomba;
 			b2Body* fisicaKoopaTroopa;
+			b2Body* fisicaTiros;
 
 			vector<b2Body *> vectorFisicaMushroom;
 			vector<b2Body *> vectorFisicaGoombas;
+			vector<b2Body *> vectorFisicaTiros;
 
 			
 		
@@ -152,6 +156,9 @@ class PlayFisicaState : public CGameState
 
 			//Vetor de Fire Flower
 			vector<CSprite *> FireFlower;
+			
+			//Vetor de tiros
+			vector<CSprite *> vetTiros;
 
 			//variável usada para impedir que seja carregado mais de um Item no mesmo local
 			bool carregoubloco1;

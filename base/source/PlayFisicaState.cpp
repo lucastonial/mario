@@ -207,6 +207,32 @@ void PlayFisicaState::CarregaFireFlower(string path, float positionX, float posi
 		FireFlower.push_back(insereFireFlower);
 }
 
+void PlayFisicaState::CarregaTiros(){
+	string nomeArq = BASE_DIR + "data/img/tiros.png";
+	testeTiro = new CSprite();
+	testeTiro->loadSprite(nomeArq.c_str(), 32, 32, 0, 0, 0, 0, 1, 1, 1);
+	testeTiro->setScale(1.0);
+	testeTiro->setFrameRange(0,0);
+	testeTiro->setPosition(spriteMario->getX(),spriteMario->getY());
+	layers->add(testeTiro,1);
+	
+	fisicaTiros = Fisica->newBoxImage(1,    //int id,
+			testeTiro,                // CImage* sprite,
+			1.0,                // float density,
+			0.3,            // float friction,
+			1.0,            // float restitution
+			1.0,			 // float linearDamping
+			1.0,			 // float angularDamping
+			false);        // bool staticObj=false
+			
+	b2Vec2 impulso;
+	b2Vec2 pos;
+	impulso.x = 600;
+	impulso.y = 200;
+	pos = fisicaMario->GetWorldCenter();
+	fisicaTiros->ApplyLinearImpulse(impulso, pos);
+}
+
 void PlayFisicaState::InicializaFisicaMushroons()
 {
 
@@ -286,12 +312,21 @@ void PlayFisicaState::VerificaColisao(CSprite *inimigo){
 		
 	if(VarTipoColisao != LADO){ // se não colidiu de lado permitimos o teste para colisao de cima, ai não tem perigo de morrer e depois matar
 		//colisao cima
-		//REFAZER ESSA CONDIÇÃO DE COLISÃO
 		if(inimigo->getX()<(spriteMario->getX()+15) && spriteMario->getX()<(inimigo->getX()+inimigo->getWidth()+5)){
 			if((inimigo->getY())<(spriteMario->getY()+45) && spriteMario->getY()<(inimigo->getY()+inimigo->getHeight())){
 				cout << "****CIMA****" << endl;
 				VarTipoColisao = CIMA;
 				colisao = true;
+			}
+		}
+		if(testeTiro){
+			if(inimigo->getX()<(testeTiro->getX()+25) && testeTiro->getX()<(inimigo->getX()+inimigo->getWidth()+10)){
+				if((inimigo->getY())<(testeTiro->getY()+45) && testeTiro->getY()<(inimigo->getY()+inimigo->getHeight())){
+					cout << "****CIMA****" << endl;
+					
+					VarTipoColisao = CIMA;
+					colisao = true;
+				}
 			}
 		}
 	}
@@ -719,9 +754,10 @@ void PlayFisicaState::handleEvents(CGame* game) {
 			}
 			
 		  if(event.key.keysym.sym == SDLK_z) {
-				if(VarEstadosMario == FLOR){
+				//if(VarEstadosMario == FLOR){
 					cout << "ESTOU ATIRANDO";
-				}
+					CarregaTiros();
+				//}
 				break;
 			}
 			
