@@ -298,8 +298,8 @@ void PlayFisicaState::VerificaColisao(CSprite *inimigo){
 
 void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador){	
 	//colisao baixo
-	if(questionBlock->getX()<(spriteMario->getX()) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth())){
-		if(questionBlock->getY()<(spriteMario->getY()) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight()+2)){
+	if(questionBlock->getX()<(spriteMario->getX()+10) && spriteMario->getX()<(questionBlock->getX()+questionBlock->getWidth()+5)){
+		if(questionBlock->getY()<(spriteMario->getY()) && spriteMario->getY()<(questionBlock->getY()+questionBlock->getHeight()+10)){
 			cout << "****BAIXO****" << endl;
 			
 			layers->remove(questionBlock);
@@ -366,33 +366,47 @@ void PlayFisicaState::VerificaColisaoQuestionBlocks(CSprite *questionBlock, int 
 }
 
 //controla os estados do mario
-void PlayFisicaState::EstadosMario(){
+void PlayFisicaState::EstadosMario(CGame* game){
 	switch (VarEstadosMario) {
 		case INICIAL:
 			cout << "inicial";
-			if(VarTipoColisao == LADO)
-				VarEstadosMario = MORTE;
+			if(timerEstados != 0.0){
+				if(timerEstados + 2000.0 < current_time){
+					timerEstados = 0.0;
+					VarTipoColisao = NADA;
+				}else
+						cout<<"****AINDA NAO MORREU****";
+			}else{
+				if(VarTipoColisao == LADO){
+					VarEstadosMario = MORTE;
+				}
+			}
 			//bool teste = spriteMario->bboxCollision(spriteKoopaTroopa); //colisao exemplo
 			//se colidir com inimigo: VarEstadosMario = MORTE;
 			//se colidir com cogumelo: VarEstadosMario = COGUMELO e modifica sprite para maior e seta tipo do item dos blocos para flor;
 			break;
 		case COGUMELO:
 			cout << "cogumelo";
-			if(VarTipoColisao == LADO)
+			if(VarTipoColisao == LADO){
+				timerEstados = current_time;
 				VarEstadosMario = INICIAL;
+			}
 			//se colidir com inimigo: VarEstadosMario = INICIAL e modifica sprite para menor e seta o tipo do item dos blocos para cogumelo;
 			//se colidir com flor: VarEstadosMario = FLOR e modifica sprite para outra cor;
 			break;
 		case FLOR:
 			cout << "flor";
-			if(VarTipoColisao == LADO)
+			if(VarTipoColisao == LADO){
+				timerEstados = current_time;
 				VarEstadosMario = INICIAL;
+			}
 			//permissao de atirar
 			//se colidir com inimigo: VarEstadosMario = INICIAL e modifica sprite para menor e seta o tipo do item dos blocos para cogumelo;
 			//se colidir com flor: VarEstado = FLOR e vida++;
 			break;
 		case MORTE:
 			cout << "morte";
+			game->pushState(PauseState::instance());
 			//finaliza o jogo
 			break;
 	}
@@ -507,7 +521,7 @@ void PlayFisicaState::MontaLayer() {
 void PlayFisicaState::InitFisica() {
 	// inicializa a classe de física e a Box2D
 	Fisica = CPhysics::instance();
-	b2Vec2 g(0,60);
+	b2Vec2 g(0,50);
 	Fisica->setGravity(g);
 	Fisica->setConvFactor(10);
 
@@ -517,10 +531,10 @@ void PlayFisicaState::InitFisica() {
 	s = spriteMario;
 	fisicaMario = Fisica->newBoxImage(MARIO_ID,    //int id,
 	                                s,                // CImage* sprite,
-	                                1,                // float density,
-	                                0.5,            // float friction,
-	                                0.0,            // float restitution
-	                                0.5,			 // float linearDamping
+	                                1.3,                // float density,
+	                                1.0,            // float friction,
+	                                0.3,            // float restitution
+	                                1.0,			 // float linearDamping
 	                                0.5,			 // float angularDamping
 	                                false);        // bool staticObj=false
 #endif
@@ -580,7 +594,7 @@ void PlayFisicaState::init() {
 	carregoubloco2 = false;
 	carregoubloco3 = false;
 
-    impedeCrashMoveMushroom = false;
+  impedeCrashMoveMushroom = false;
 
 	podeCriarFisicaMushroom = false;
 
@@ -595,6 +609,8 @@ void PlayFisicaState::init() {
 	colisao = false;//inicia como false a variável auxiliar que controla a colisão entre os sprites
 	
 	AcaoMario = PARADO;
+	timerEstados = 0.0;
+	current_time = SDL_GetTicks();
 }
 
 void PlayFisicaState::cleanup() {
@@ -665,7 +681,7 @@ void PlayFisicaState::handleEvents(CGame* game) {
 				
 			}
 			
-			if  (event.key.keysym.sym == SDLK_SPACE) {
+			if(event.key.keysym.sym == SDLK_SPACE) {
 
 						
 				AcaoMario = PULANDO;
@@ -700,7 +716,14 @@ void PlayFisicaState::handleEvents(CGame* game) {
 
 				break;		
 			}
-
+			
+		  if(event.key.keysym.sym == SDLK_z) {
+				if(VarEstadosMario == FLOR){
+					cout << "ESTOU ATIRANDO";
+				}
+				break;
+			}
+			
 			break;
 
 			// SDL_APPACTIVE: When the application is either minimized/iconified
@@ -774,7 +797,7 @@ void PlayFisicaState::handleEvents(CGame* game) {
 	if(keystate[SDLK_RIGHT]==1) {
 		
 		PontoFinal = fisicaMario->GetWorldCenter();
-		Direcao = b2Vec2(55,0);	
+		Direcao = b2Vec2(30,0);	
 		
 		fisicaMario->ApplyLinearImpulse(Direcao, PontoFinal);
 		if(spriteMario->getX() > 6848)
@@ -820,7 +843,7 @@ void PlayFisicaState::handleEvents(CGame* game) {
 	if(keystate[SDLK_LEFT]==1) {
 
 		PontoFinal = fisicaMario->GetWorldCenter();
-		Direcao = b2Vec2(55,0);
+		Direcao = b2Vec2(30,0);
 
 		fisicaMario->ApplyLinearImpulse(-Direcao, PontoFinal);
 		spriteMario->setMirror(true);
@@ -945,7 +968,7 @@ void PlayFisicaState::update(CGame* game) {
 		noChao = true;
 	}
 
-	EstadosMario();	
+	EstadosMario(game);	
 
 
 
@@ -1016,7 +1039,8 @@ void PlayFisicaState::update(CGame* game) {
 			}
 			
 		}
-		
+		//seta o tempo atual
+		current_time = SDL_GetTicks();
 }
 
 void PlayFisicaState::draw(CGame* game) {

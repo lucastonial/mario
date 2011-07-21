@@ -76,11 +76,11 @@ class PlayFisicaState : public CGameState
 			void CarregaGoomba(string path, float positionX, float positionY);
 			void CarregaKoopaTroopas(string path, float positionX, float positionY);
 			void CarregaMushroons(string path, float positionX, float positionY);
-		    void CarregaFireFlower(string path, float positionX, float positionY);
+		  void CarregaFireFlower(string path, float positionX, float positionY);
 			void InicializaFisicaMushroons();
 			void InicializaFisicaGoombas();
 			void InicializaFisicaKoopaTroopa();
-			void EstadosMario();
+			void EstadosMario(CGame* game);
 			void VerificaColisaoQuestionBlocks(CSprite *questionBlock, int identificador);
 			void VerificaColisao(CSprite *inimigo); //passa sprite do inimigo + seu ID para poder eliminá-lo
 			void MoveGoombas();
@@ -186,6 +186,11 @@ class PlayFisicaState : public CGameState
 			int tempoParaMover;
 
 			bool podeCriarFisicaMushroom;
+			
+			//timer se nao estiver no estado inicial e encostar lateralmente em um inimigo (timer para invencibilidade)
+			double timerEstados;
+			//tempo atual de execucao do jogo
+			double current_time;
 
 			
 			b2RevoluteJoint* joint; 
