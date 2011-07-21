@@ -76,7 +76,7 @@ class PlayFisicaState : public CGameState
 			void CarregaGoomba(string path, float positionX, float positionY);
 			void CarregaKoopaTroopas(string path, float positionX, float positionY);
 			void CarregaMushroons(string path, float positionX, float positionY);
-		  void CarregaFireFlower(string path, float positionX, float positionY);
+			void CarregaFireFlower(string path, float positionX, float positionY);
 			void InicializaFisicaMushroons();
 			void InicializaFisicaGoombas();
 			void InicializaFisicaKoopaTroopa();
@@ -85,7 +85,13 @@ class PlayFisicaState : public CGameState
 			void VerificaColisao(CSprite *inimigo); //passa sprite do inimigo + seu ID para poder eliminá-lo
 			void MoveGoombas();
 			void MoveMushroom();
+<<<<<<< HEAD
 			void CarregaTiros(); //instancia os tiros
+=======
+			void RemoveGoombasPeloAndamentoCenario();
+			void CarregaSons(CGame* game);
+			void MoveKoopaTroopa();
+>>>>>>> GitHubMario/master
 		
     private:
 			static PlayFisicaState m_PlayState;
@@ -175,15 +181,18 @@ class PlayFisicaState : public CGameState
 			//variável para controlar a colisão entre Sprites
 			bool colisao;
 
-			//contador que permite o Mario pular, toda vez que for 0 e for pressionado a tecla de espaço
-			int tempoEsperaPulo;
+			int contadorGoombas;
 		
 			b2Vec2 Direcao;
 			b2Vec2 PontoFinal;
 
-			//variáveis que controlam os movimentos dos inimigos
+			//variáveis que controlam os movimentos dos goombas
 			b2Vec2 DirecaoGoombas;
 			b2Vec2 PontoFinalGoombas;
+
+			//variáveis que controlam os movimentos dos koopa troopa
+			b2Vec2 DirecaoKoopaTroopa;
+			b2Vec2 PontoFinalKoopaTroopa;
 
 			//variáveis que controlam os movimentos dos mushroons
 			b2Vec2 DirecaoMushroons;
@@ -198,6 +207,14 @@ class PlayFisicaState : public CGameState
 			double timerEstados;
 			//tempo atual de execucao do jogo
 			double current_time;
+
+			//Variável para controlar se o som já está carregado
+			bool somCarregado;
+
+			//Variáveis para controlar os sons do jogo
+			irrklang::ISoundSource *somTema; 
+			irrklang::ISoundSource *somSalto;
+	
 
 			
 			b2RevoluteJoint* joint; 
