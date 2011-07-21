@@ -28,9 +28,9 @@ void TelaInicialState::init()
 	telaInicialSprite = new CImage();
 	string nomeArq = BASE_DIR + "data/img/TelaInicial.png";
 	telaInicialSprite->loadImage(nomeArq.c_str());
-    telaInicialSprite->setPosition(140,40);
+    telaInicialSprite->setPosition(140,30);
    // telaInicialFont = new CFont();
-//	nomeArq = BASE_DIR + "data/fonts/lucida12.png";
+   //nomeArq = BASE_DIR + "data/fonts/lucida12.png";
    // telaInicialFont->loadFont(nomeArq.c_str(), 112, 208);
     cout << "TelaInicialState Init Successful" << endl;
 }

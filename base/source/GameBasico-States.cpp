@@ -33,7 +33,7 @@ using namespace std;
 int main( int argc, char* args[] ) {
     CGame game(5,30);
 
-	game.init("Super Mario Bros - Trabalho de Prog2D",800,515,0,false);
+	game.init("Super Mario Bros - Trabalho de Prog2D",800,480,0,false);
 
     //game.changeState(MenuState::instance());
 	game.changeState(TelaInicialState::instance());
